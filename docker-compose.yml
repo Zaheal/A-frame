@@ -1,0 +1,13 @@
+version: "3.3"
+services:
+  postgres:
+    image: postgres:16.3
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpwd4habr
+    ports:
+      - "5432:5432"
+
+volumes:
+  db-data:
