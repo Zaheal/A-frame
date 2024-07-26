@@ -15,14 +15,14 @@ class BusyTimeService:
             busy_time_id = await uow.busy_times.create(busy_times_dict)
             return busy_time_id
 
-    async def get_busy_times(self, uow: IUnitOfWork):
+    async def get_busy_times(self, uow: IUnitOfWork, **filters):
         """
 
         :param uow:
         :return model:
         """
         async with uow:
-            busy_times = await uow.busy_times.get_multi()
+            busy_times = await uow.busy_times.get_multi(**filters)
             return busy_times
 
     async def edit_busy_time(self, uow: IUnitOfWork, busy_time: SBusyTimeEdit, busy_time_id: int):

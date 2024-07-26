@@ -1,9 +1,9 @@
 from typing import List
-from datetime import datetime
+from datetime import date
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.types import DateTime
+from sqlalchemy.types import Date
 
 from .base_model import Base
 
@@ -21,18 +21,18 @@ class HouseModel(Base):
     bath: Mapped[bool]
 
     busy_times: Mapped[List["BusyTimeModel"]] = relationship(back_populates='house',
-                                                             cascade='all, delete',
                                                              lazy='selectin')
 
 
 class BusyTimeModel(Base):
     __tablename__ = 'busy_times'
 
-    start: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-    end: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    email: Mapped[str] = mapped_column(String(length=320), nullable=False)
+    number: Mapped[str] = mapped_column(String(12), nullable=False)
+    start: Mapped[date] = mapped_column(Date(), server_default=f"{date.today()}")
+    end: Mapped[date] = mapped_column(Date(), server_default=f"{date.today()}")
     full_price: Mapped[int]
-    house_id: Mapped[int] = mapped_column(ForeignKey("houses.id", ondelete='CASCADE'))
+    house_id: Mapped[int] = mapped_column(ForeignKey("houses.id"))
 
     house: Mapped["HouseModel"] = relationship(back_populates='busy_times',
-                                               cascade='all, delete',
                                                lazy='selectin')

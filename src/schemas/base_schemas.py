@@ -1,7 +1,7 @@
-from datetime import datetime
-from typing import NewType
+import re
+from datetime import date
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 
 class SHouse(BaseModel):
@@ -39,19 +39,36 @@ class SHouseRead(SHouseAdd):
 
 class SBusyTimeModel(BaseModel):
     id: int
-    start: datetime
-    end: datetime
+    email: str
+    number: str
+    start: date
+    end: date
     full_price: int
     house_id: int
     house: "SHouse"
 
 
 class SBusyTimeAdd(BaseModel):
-    start: datetime
-    end: datetime
+    email: str
+    number: str
+    start: date
+    end: date
     full_price: int
     house_id: int
 
 
+    @field_validator("number")
+    @classmethod
+    def number_is_valid(cls, values: str) -> str:
+        if not re.match(r'^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$',
+                        values):
+            raise ValueError("Номер телефона должен начинаться с +7, 7 или 8 и содержать от 11 до 12 цифр")
+        return values
+
+
 class SBusyTimeEdit(SBusyTimeAdd):
+    pass
+
+
+class SBusyTimeRead(SBusyTimeAdd):
     pass

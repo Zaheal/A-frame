@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 
 from ...models.auth_models import User
-from ...schemas.base_schemas import SBusyTimeAdd, SBusyTimeEdit
+from ...schemas.base_schemas import SBusyTimeAdd, SBusyTimeEdit, SBusyTimeRead
 from ...services.busy_time_service import BusyTimeService
 from ...utils.dependencies import UOWDep
 
@@ -21,7 +21,7 @@ async def create_busy_time(uow: UOWDep, busy_time: SBusyTimeAdd):
         raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
-@router.get("/busy_times/")
+@router.get("/busy_times/", response_model=list[SBusyTimeRead])
 async def list_busy_times(uow: UOWDep):
     try:
         return await BusyTimeService().get_busy_times(uow)

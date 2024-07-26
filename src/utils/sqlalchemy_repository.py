@@ -36,8 +36,8 @@ class SqlAlchemyRepository(AbstractRepository):
             row = await session.execute(stmt)
             return row.scalar_one_or_none()
 
-    async def get_multi(self) -> list[BaseModel]:
+    async def get_multi(self, **filters) -> list[BaseModel]:
         async with self._session_factory as session:
-            stmt = select(self.model).order_by('id').limit(100)
+            stmt = select(self.model).filter_by(**filters).order_by('id').limit(100)
             res = await session.execute(stmt)
             return res.unique().scalars().all()
