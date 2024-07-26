@@ -7,6 +7,8 @@ class ConfigAuth(BaseSettings):
     RESET_PASSWORD_TOKEN_SECRET: str
     VERIFICATION_TOKEN_SECRET: str
     JWT_SECRET: str
+    DEFAULT_EMAIL: str
+    DEFAULT_PWD: str
 
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
 
