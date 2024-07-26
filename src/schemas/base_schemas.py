@@ -33,6 +33,10 @@ class SHouseEdit(SHouseAdd):
     pass
 
 
+class SHouseRead(SHouseAdd):
+    pass
+
+
 class SBusyTimeModel(BaseModel):
     id: int
     start: datetime
