@@ -3,7 +3,15 @@ import uuid
 from fastapi_users import schemas
 
 
-class UserRead(schemas.BaseUser[uuid.UUID]):
+class OAuthAccount(schemas.BaseOAuthAccount):
+    pass
+
+
+class User(schemas.BaseModel):
+    pass
+
+
+class UserRead(schemas.BaseUser[int]):
     pass
 
 

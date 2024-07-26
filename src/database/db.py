@@ -1,11 +1,9 @@
 from asyncio import current_task
-from contextlib import asynccontextmanager
 
 from sqlalchemy.ext.asyncio import (
-    AsyncSession,
     create_async_engine,
     async_sessionmaker,
-    async_scoped_session
+    async_scoped_session, AsyncSession
 )
 
 from ..config.db_config import get_db_settings
@@ -28,14 +26,13 @@ class Database:
             scopefunc=current_task
         )
 
-    @asynccontextmanager
     async def get_db_session(self):
         from sqlalchemy import exc
 
         session: AsyncSession = self.session_factory()
         try:
             yield session
-        except exc.SQLAlchemyError as error:
+        except exc.SQLAlchemyError as _:
             await session.rollback()
             raise
         finally:

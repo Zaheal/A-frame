@@ -3,16 +3,14 @@ from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Settings(BaseSettings):
-    DB_ECHO: bool
-    PROJECT_NAME: str
-    VERSION: str
-    DEBUG: bool
-    CORS_ALLOWED_ORIGINS: str
+class ConfigAuth(BaseSettings):
+    RESET_PASSWORD_TOKEN_SECRET: str
+    VERIFICATION_TOKEN_SECRET: str
+    JWT_SECRET: str
 
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
 
 
 @lru_cache
-def get_settings():
-    return Settings()
+def get_auth_settings():
+    return ConfigAuth()

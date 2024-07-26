@@ -1,21 +1,21 @@
-import uuid
 from typing import Optional
 
 from fastapi import Depends, Request
-from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin
+from fastapi_users import BaseUserManager, FastAPIUsers, IntegerIDMixin
 from fastapi_users.authentication import AuthenticationBackend
 from fastapi_users.db import SQLAlchemyUserDatabase
 
 from ..models.auth_models import User, get_user_db
 from ..config.auth.strategy import get_jwt_strategy
 from ..config.auth.transport import cookie_transport
+from ..config.auth_config import get_auth_settings
 
-SECRET = "SECRET"
+settings = get_auth_settings()
 
 
-class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
-    reset_password_token_secret = SECRET
-    verification_token_secret = SECRET
+class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
+    reset_password_token_secret = settings.RESET_PASSWORD_TOKEN_SECRET
+    verification_token_secret = settings.VERIFICATION_TOKEN_SECRET
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         print(f"User {user.id} has registered.")
@@ -41,6 +41,6 @@ auth_backend = AuthenticationBackend(
     get_strategy=get_jwt_strategy,
 )
 
-fastapi_users = FastAPIUsers[User, uuid.UUID](get_user_manager, [auth_backend])
+fastapi_users = FastAPIUsers[User, int](get_user_manager, [auth_backend])
 
 current_active_user = fastapi_users.current_user(active=True)

@@ -1,0 +1,5 @@
+docker-compose up -d
+uvicorn main:app --reload
+sudo docker compose exec postgres psql db --username pguser --password
+alembic upgrade head
+alembic revision --autogenerate -m "initial coer models"

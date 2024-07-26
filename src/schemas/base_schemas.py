@@ -1,32 +1,40 @@
 from datetime import datetime
+from typing import NewType
 
 from pydantic import BaseModel
 
 
 class SHouse(BaseModel):
-    name: str
+    id: int
+    style: str
     color: str
     air_conditioner: bool
     place: int
     size: int
     cost: int
-    space: int
-    bath_id: int
-    bath: "SBath"
-    prices: list["SPriceHouse"]
+    location: str
+    bath: bool
+
+    busy_times: list["SBusyTimeModel"]
 
 
-class SBath(BaseModel):
-    name: str
-    liter: int
-    space: int
+class SHouseAdd(BaseModel):
+    style: str
+    color: str
+    air_conditioner: bool
+    place: int
+    size: int
     cost: int
-    prices: list["SPriceHouse"]
-    houses: list["SHouse"]
+    location: str
+    bath: bool
 
 
-class SPriceHouse(BaseModel):
-    name: str
+class SHouseEdit(SHouseAdd):
+    pass
+
+
+class SBusyTimeModel(BaseModel):
+    id: int
     start: datetime
     end: datetime
     full_price: int
@@ -34,10 +42,12 @@ class SPriceHouse(BaseModel):
     house: "SHouse"
 
 
-class SPriceBath(BaseModel):
-    name: str
+class SBusyTimeAdd(BaseModel):
     start: datetime
     end: datetime
     full_price: int
-    bath_id: int
-    bath: "SBath"
+    house_id: int
+
+
+class SBusyTimeEdit(SBusyTimeAdd):
+    pass
