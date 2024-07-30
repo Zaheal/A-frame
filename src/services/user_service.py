@@ -46,5 +46,5 @@ class UserService:
         :return:
         """
         async with uow:
-            await uow.users.delete(pk=user_id)
+            await uow.users.delete(id=user_id)
             return

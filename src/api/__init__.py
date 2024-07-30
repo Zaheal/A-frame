@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from .controllers.house_contollers import router as house_router
-from .controllers.busy_time_controllers import router as busy_time_router
+from .controllers.user_reservation_controllers import router as busy_time_router
 
 router = APIRouter(prefix="/home")
 

@@ -1,8 +1,10 @@
 import re
 from datetime import date
+import uuid
 
 from pydantic import BaseModel, field_validator
 
+from ..models.core_models import VarOfPaid
 
 class SHouse(BaseModel):
     id: int
@@ -15,7 +17,7 @@ class SHouse(BaseModel):
     location: str
     bath: bool
 
-    busy_times: list["SBusyTimeModel"]
+    busy_times: list["SBusyTime"]
 
 
 class SHouseAdd(BaseModel):
@@ -37,7 +39,7 @@ class SHouseRead(SHouseAdd):
     pass
 
 
-class SBusyTimeModel(BaseModel):
+class SBusyTime(BaseModel):
     id: int
     email: str
     number: str
@@ -45,6 +47,9 @@ class SBusyTimeModel(BaseModel):
     end: date
     full_price: int
     house_id: int
+    user_id: uuid.UUID
+    was_paid: VarOfPaid = VarOfPaid.not_paid
+
     house: "SHouse"
 
 
@@ -55,6 +60,7 @@ class SBusyTimeAdd(BaseModel):
     end: date
     full_price: int
     house_id: int
+    was_paid: VarOfPaid = VarOfPaid.not_paid
 
 
     @field_validator("number")

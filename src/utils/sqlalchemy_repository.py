@@ -25,9 +25,9 @@ class SqlAlchemyRepository(AbstractRepository):
             await session.commit()
             return res.scalar_one()
 
-    async def delete(self, pk: int) -> None:
+    async def delete(self, **filters) -> None:
         async with self._session_factory as session:
-            await session.execute(delete(self.model).filter_by(id=pk))
+            await session.execute(delete(self.model).filter_by(**filters))
             await session.commit()
 
     async def get_single(self, **filters) -> BaseModel | None:

@@ -46,7 +46,7 @@ class HouseService:
         :return:
         """
         async with uow:
-            await uow.houses.delete(pk=house_id)
+            await uow.houses.delete(id=house_id)
             return
 
     async def get_house(self, uow: IUnitOfWork, house_id: int):
