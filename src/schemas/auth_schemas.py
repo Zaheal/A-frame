@@ -4,17 +4,16 @@ from fastapi_users import schemas
 
 
 class User(schemas.BaseModel):
-    tg_id: int
+    tg_id: int | None
 
 
 
 class UserRead(schemas.BaseUser[uuid.UUID]):
-    tg_id: int
+    tg_id: int | None
 
 
 class UserCreate(schemas.BaseUserCreate):
-    id: uuid.UUID
-    tg_id: int
+    tg_id: int | None
 
 
 class UserUpdate(schemas.BaseUserUpdate):

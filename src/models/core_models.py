@@ -23,7 +23,7 @@ class VarOfPaid(str, enum.Enum):
     not_paid = "not_paid"
 
 
-class User(Base, SQLAlchemyBaseUserTableUUID):
+class User(SQLAlchemyBaseUserTableUUID, Base):
     tg_id: Mapped[int] = mapped_column(Integer, nullable=True)
 
     busy_times: Mapped[List["ReservationModel"]] = relationship(back_populates='user',
@@ -51,10 +51,10 @@ class HouseModel(Base):
 
 
 class ReservationModel(Base):
-    __tablename__ = 'busy_times'
+    __tablename__ = 'reservations'
 
     email: Mapped[str] = mapped_column(String(length=320))
-    tg_id: Mapped[int] = mapped_column(String(), nullable=True)
+    tg_id: Mapped[int] = mapped_column(Integer(), nullable=True)
     start: Mapped[date] = mapped_column(Date(), server_default=f"{date.today()}")
     end: Mapped[date] = mapped_column(Date(), server_default=f"{date.today() + timedelta(days=1)}")
     full_price: Mapped[int]

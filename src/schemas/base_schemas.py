@@ -60,7 +60,7 @@ class SReservation(BaseModel):
 
 class SReservationAdd(BaseModel):
     email: EmailStr
-    tg_id: int
+    tg_id: int | None
     start: date
     end: date
     full_price: int
@@ -75,6 +75,4 @@ class SReservationEdit(SReservationAdd):
 
 
 class SReservationRead(SReservationAdd):
-    user_id: int
-    # user_uuid: int
-    tg_id: int
+    pass

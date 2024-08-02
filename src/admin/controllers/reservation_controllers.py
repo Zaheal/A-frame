@@ -14,33 +14,33 @@ def is_admin():
     return User(is_superuser=True)
 
 
-@router.post("/busy_time/add", dependencies=[Depends(current_superuser)])
-async def create_busy_time(uow: UOWDep, busy_time: SReservationAdd):
+@router.post("/reservation/add", dependencies=[Depends(current_superuser)])
+async def create_reservation(uow: UOWDep, reservation: SReservationAdd):
     try:
-        return await ReservationService().add_busy_time(uow, busy_time)
+        return await ReservationService().add_reservation(uow, reservation)
     except Exception as e:
         raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
-@router.get("/busy_times/", response_model=list[SReservationRead], dependencies=[Depends(current_superuser)])
-async def list_busy_times(uow: UOWDep):
+@router.get("/reservations/", response_model=list[SReservationRead], dependencies=[Depends(current_superuser)])
+async def list_reservations(uow: UOWDep):
     try:
-        return await ReservationService().get_busy_times(uow)
+        return await ReservationService().get_reservations(uow)
     except Exception as e:
         raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
-@router.put("/busy_time/{busy_time_id}", dependencies=[Depends(current_superuser)])
-async def update_busy_time(uow: UOWDep, busy_time_id: int, busy_time: SReservationEdit):
+@router.put("/reservation/{reservation_id}", dependencies=[Depends(current_superuser)])
+async def update_reservation(uow: UOWDep, reservation_id: int, reservation: SReservationEdit):
     try:
-        return await ReservationService().edit_busy_time(uow, busy_time, busy_time_id)
+        return await ReservationService().edit_reservation(uow, reservation, reservation_id)
     except Exception as e:
         raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
-@router.delete("/busy_time/{busy_time_id}", status_code=HTTP_204_NO_CONTENT, dependencies=[Depends(current_superuser)])
-async def delete_busy_time(uow: UOWDep, busy_time_id: int):
+@router.delete("/reservation/{reservation_id}", status_code=HTTP_204_NO_CONTENT, dependencies=[Depends(current_superuser)])
+async def delete_reservation(uow: UOWDep, reservation_id: int):
     try:
-        return await ReservationService().remove_busy_time(uow, busy_time_id)
+        return await ReservationService().remove_reservation(uow, reservation_id)
     except Exception as e:
         raise HTTPException(HTTP_400_BAD_REQUEST, str(e))

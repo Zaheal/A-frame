@@ -15,6 +15,7 @@ get_user_manager_context = contextlib.asynccontextmanager(get_user_manager)
 settings = get_auth_settings()
 
 default_email = settings.DEFAULT_EMAIL
+default_tg_id = settings.DEFAULT_TG_ID
 default_password = settings.DEFAULT_PWD
 default_is_active = True
 default_is_superuser = True
@@ -25,15 +26,13 @@ async def create_user(
     user_manager: UserManager,
     user_create: UserCreate,
 ) -> User:
-    user = await user_manager.create(
-        user_create=user_create,
-        safe=False,
-    )
+    user = await user_manager.create(user_create=user_create, safe=False)
     return user
 
 
 async def create_superuser(
     email: str = default_email,
+    tg_id: int = default_tg_id,
     password: str = default_password,
     is_active: bool = default_is_active,
     is_superuser: bool = default_is_superuser,
@@ -41,6 +40,7 @@ async def create_superuser(
 ):
     user_create = UserCreate(
         email=email,
+        tg_id=tg_id,
         password=password,
         is_active=is_active,
         is_superuser=is_superuser,

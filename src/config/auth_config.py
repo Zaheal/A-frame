@@ -9,6 +9,7 @@ class ConfigAuth(BaseSettings):
     JWT_SECRET: str
     DEFAULT_EMAIL: str
     DEFAULT_PWD: str
+    DEFAULT_TG_ID: int
 
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
 
