@@ -3,13 +3,13 @@ from typing import Type
 
 from ..database.db import db_helper
 from ..repositories.houses import HousesRepository
-from ..repositories.busy_times import BusyTimesRepository
+from ..repositories.reservations import ReservationsRepository
 from ..repositories.users import UsersRepository
 
 
 class IUnitOfWork(ABC):
     houses: Type[HousesRepository]
-    busy_times: Type[BusyTimesRepository]
+    reservations: Type[ReservationsRepository]
     users: Type[UsersRepository]
 
     @abstractmethod
@@ -42,7 +42,7 @@ class UnitOfWork:
 
         self.users = UsersRepository(self.session)
         self.houses = HousesRepository(self.session)
-        self.busy_times = BusyTimesRepository(self.session)
+        self.reservations = ReservationsRepository(self.session)
 
     async def __aexit__(self, *args):
         await self.rollback()

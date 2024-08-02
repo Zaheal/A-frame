@@ -4,7 +4,7 @@ import contextlib
 from src.auth.user import get_user_manager
 from src.auth.user import UserManager
 from src.database.db import db_helper
-from src.models.auth_models import User, get_user_db
+from src.models.core_models import User, get_user_db
 from src.schemas.auth_schemas import UserCreate
 from src.config.auth_config import get_auth_settings
 

@@ -1,4 +1,4 @@
-from ..models.auth_models import User as SUser
+from ..models.core_models import User as SUser
 from ..utils.sqlalchemy_repository import SqlAlchemyRepository
 
 
