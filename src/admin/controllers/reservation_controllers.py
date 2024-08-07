@@ -1,17 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 
-from ...models.core_models import User
 from ...schemas.base_schemas import SReservationAdd, SReservationEdit, SReservationRead
 from ...services.reservation_service import ReservationService
 from ...utils.dependencies import UOWDep
 from ...auth.user import current_superuser
 
-router = APIRouter(prefix='/admin', tags=['admin'])
-
-
-def is_admin():
-    return User(is_superuser=True)
+router = APIRouter(tags=['admin/reservation'])
 
 
 @router.post("/reservation/add", dependencies=[Depends(current_superuser)])

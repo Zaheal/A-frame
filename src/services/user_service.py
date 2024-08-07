@@ -48,3 +48,18 @@ class UserService:
         async with uow:
             await uow.users.delete(id=user_id)
             return
+
+    async def get_user(self, uow: IUnitOfWork, tg_id: int | None, email: str | None):
+        """
+
+        :param tg_id:
+        :param email:
+        :param uow:
+        :return user:
+        """
+        async with uow:
+            if tg_id:
+                user = await uow.users.get_single(tg_id=tg_id)
+            elif email:
+                user = await uow.users.get_single(email=email)
+            return user

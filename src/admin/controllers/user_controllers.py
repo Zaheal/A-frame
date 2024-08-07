@@ -1,23 +1,26 @@
 from fastapi import APIRouter, Depends, HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 
-from ...models.core_models import User
 from ...schemas.auth_schemas import UserCreate, UserUpdate, UserRead
 from ...services.user_service import UserService
 from ...utils.dependencies import UOWDep
 from ...auth.user import current_superuser
 
-router = APIRouter(prefix='/admin', tags=['admin'])
-
-
-def is_admin():
-    return User(is_superuser=True)
+router = APIRouter(tags=['admin/user'])
 
 
 @router.post("/user/add", dependencies=[Depends(current_superuser)])
 async def create_user(uow: UOWDep, user: UserCreate):
     try:
         return await UserService().add_user(uow, user)
+    except Exception as e:
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
+
+
+@router.get("/get/user/")
+async def get_user(uow: UOWDep, tg_id: int | None = None, email: str | None = None):
+    try:
+        return await UserService().get_user(uow, tg_id=tg_id, email=email)
     except Exception as e:
         raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 

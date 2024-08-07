@@ -1,10 +1,11 @@
-from fastapi import APIRouter, HTTPException, Cookie
-from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
+from fastapi import APIRouter, HTTPException, Cookie, Depends, Request
+from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT, HTTP_401_UNAUTHORIZED
 
 from ...schemas.base_schemas import SReservationRead, SReservationAdd
 from ...services.reservation_service import ReservationService
 from ...utils.dependencies import UOWDep
 from ...auth.user import current_active_user
+from ...models.core_models import User
 
 router = APIRouter(tags=['choose'])
 
@@ -42,21 +43,30 @@ async def get_user_reservations(uow: UOWDep, user_id: str | None = Cookie(defaul
 
 
 @router.post("/create/reservation")
-async def create_reservation(uow: UOWDep, reservation: SReservationAdd, user_id: str | None = Cookie(default=None)) -> int:
+async def create_reservation(uow: UOWDep,
+                             reservation: SReservationAdd,
+                             user_id: str | None = Cookie(default=None),
+                             user: User | None = Depends(current_active_user)
+                             ):
     """
-    Создаёт бронь
+    Создаёт бронь, если пользователь авторизирован получает данные из бд, а если нет,
+    то запрашивает почту и берёт id пользователя из Cookie
 
+
+    :param user:
     :param user_id:
     :param uow:
     :param reservation:
     :return:
     """
     try:
-        if user_id:
-            request = await ReservationService().add_reservation(uow, reservation, user_id)
-            return request
+        if user is None:
+            if user_id:
+                return await ReservationService().add_reservation(uow, reservation, user_id)
+            else:
+                raise NameError("Прошу перейдите на главную страницу")
         else:
-            raise NameError("Прошу перейдите на главную страницу")
+            return await ReservationService().add_reservation(uow, reservation, user.id)
     except Exception as e:
         return HTTPException(HTTP_400_BAD_REQUEST, e)
 

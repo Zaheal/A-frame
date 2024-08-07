@@ -54,13 +54,11 @@ class ReservationModel(Base):
     __tablename__ = 'reservations'
 
     email: Mapped[str] = mapped_column(String(length=320))
-    tg_id: Mapped[int] = mapped_column(Integer(), nullable=True)
     start: Mapped[date] = mapped_column(Date(), server_default=f"{date.today()}")
     end: Mapped[date] = mapped_column(Date(), server_default=f"{date.today() + timedelta(days=1)}")
     full_price: Mapped[int]
     was_paid: Mapped[str] = mapped_column(String(), default="not_paid")
 
-    # user_uuid: Mapped[UUID] = mapped_column(GUID, nullable=True)
     house_id: Mapped[int] = mapped_column(ForeignKey("houses.id"))
     user_id: Mapped[UUID] = mapped_column(ForeignKey("user.id"), nullable=True)
 
