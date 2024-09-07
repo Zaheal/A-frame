@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from .auth.controllers.auth_controllers import auth_router
 from .admin import router as admin_router
 from .api import router as api_router
+from .pages import router as pages_router
 
 
 def get_apps_router() -> APIRouter:
@@ -13,5 +14,7 @@ def get_apps_router() -> APIRouter:
     router.include_router(admin_router)
     # API router
     router.include_router(api_router)
+    # Pages router
+    router.include_router(pages_router)
 
     return router

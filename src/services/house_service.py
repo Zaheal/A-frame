@@ -1,5 +1,5 @@
-from ..schemas.base_schemas import SHouseAdd, SHouseEdit
-from ..utils.unitofwork import IUnitOfWork
+from src.schemas.base_schemas import SHouseAdd, SHouseEdit
+from src.utils.unitofwork import IUnitOfWork
 
 
 class HouseService:

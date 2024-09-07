@@ -1,13 +1,46 @@
 version: "3.3"
 services:
+
   postgres:
     image: postgres:16.3
     environment:
       POSTGRES_DB: db
       POSTGRES_USER: pguser
       POSTGRES_PASSWORD: pgpwd4habr
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U pguser -d db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
     ports:
       - "5432:5432"
+
+  test_db:
+    image: postgres:16.3
+    environment:
+      POSTGRES_DB: db_test
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpwd4habr
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U pguser -d db_test" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    ports:
+      - "5433:5432"
+
   redis:
     image: redis:latest
     environment:

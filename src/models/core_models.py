@@ -29,6 +29,14 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
     busy_times: Mapped[List["ReservationModel"]] = relationship(back_populates='user',
                                                                 lazy='selectin')
 
+    @property
+    def is_authenticated(self):
+        """
+        Всегда возвращает True. Это способ узнать, был ли пользователь
+        аутентифицирован в шаблонах.
+        """
+        return True
+
 
 async def get_user_db(session: AsyncSession = Depends(db_helper.get_db_session)):
     yield SQLAlchemyUserDatabase(session, User)

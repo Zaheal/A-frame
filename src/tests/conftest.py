@@ -1,38 +1,50 @@
+from os import environ
+import asyncpg
+
 import pytest
+from httpx import AsyncClient, ASGITransport
+from alembic.command import upgrade, downgrade
+from alembic.config import Config
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.asyncio import AsyncSession
+from main import app
+from src.config.db_config import get_db_settings
+from src.database.db import Database
+from src.models.base_model import Base
 
-from ..models.base_model import Base
+environ["TESTING"] = "True"
+settings = get_db_settings()
 
-# Create a test database engine
-engine = create_engine('sqlite:///test.db', echo=True)
-
-# Create a session maker
-Session = sessionmaker(bind=engine, class_=AsyncSession)
-
-
-# Create a test database
-async def create_test_database():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+db_instance = Database(settings.database_url)
 
 
-# Drop the test database
-async def drop_test_database():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
+@pytest.fixture(scope="function")
+async def client():
+    async with AsyncClient(
+        transport=ASGITransport(app=app),
+        base_url=f"http://test"
+    ) as client:
+        yield client
 
 
-@pytest.fixture
-async def db():
-    await create_test_database()
-    yield
-    await drop_test_database()
+@pytest.fixture(scope="session")
+async def session():
+    async with db_instance.engine.begin() as connection:
+
+        async with db_instance.session_factory(bind=connection) as session:
+            yield session
+            await session.flush()
+            await session.rollback()
+
+# @pytest.fixture(scope="session")
+# async def create_migrations():
+#     db = Database(settings.database_url, settings.DB_ECHO_LOG)
+#
+#     config = Config("alembic.ini")
+#     config.set_main_option("script_location", "migrations")
+#     config.set_main_option("sqlalchemy.url", settings.database_url)
+#     upgrade(config, "head")
+#     yield
+#     downgrade(config, "base")
 
 
-@pytest.fixture
-async def session(db):
-    async with Session() as session:
-        yield session
+

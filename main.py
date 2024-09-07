@@ -2,6 +2,7 @@ import uvicorn
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from src.config.project_config import get_settings
 from src.routes import get_apps_router
@@ -18,6 +19,7 @@ def get_application() -> FastAPI:
 
     application.include_router(get_apps_router())
 
+    application.mount(f"{settings.TEMPLATE_URL}static", StaticFiles(directory=f"{settings.TEMPLATE_URL}static"), name='static')
 
     application.add_middleware(
         CORSMiddleware,
