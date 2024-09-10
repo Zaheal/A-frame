@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 
-from ...schemas.base_schemas import SHouseAdd, SHouseEdit
-from ...services.house_service import HouseService
-from ...utils.dependencies import UOWDep
-from ...auth.user import current_superuser
+from src.schemas.base_schemas import SHouseAdd, SHouseEdit
+from src.services.house_service import HouseService
+from src.utils.dependencies import UOWDep
+from src.auth.user import current_superuser
 
 router = APIRouter(tags=['admin/house'])
 

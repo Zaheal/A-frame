@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession,
 )
 
-from ..config.db_config import get_db_settings
+from src.config.db_config import get_db_settings
 
 
 class Database:

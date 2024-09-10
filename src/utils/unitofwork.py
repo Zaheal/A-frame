@@ -4,6 +4,7 @@ from typing import Type
 from src.repositories.houses import HousesRepository
 from src.repositories.reservations import ReservationsRepository
 from src.repositories.users import UsersRepository
+from src.database.db import db_helper
 
 
 class IUnitOfWork(ABC):
@@ -33,8 +34,8 @@ class IUnitOfWork(ABC):
 
 
 class UnitOfWork:
-    def __init__(self, session_factory):
-        self._session_factory = session_factory
+    def __init__(self):
+        self._session_factory = db_helper.session_factory
 
     async def __aenter__(self):
         self.session = self._session_factory()

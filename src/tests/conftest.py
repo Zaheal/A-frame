@@ -1,24 +1,36 @@
 from os import environ
-import asyncpg
 
 import pytest
+from fastapi_users.authentication import AuthenticationBackend
 from httpx import AsyncClient, ASGITransport
-from alembic.command import upgrade, downgrade
-from alembic.config import Config
 
 from main import app
-from src.config.db_config import get_db_settings
-from src.database.db import Database
+from src.database.db import db_helper
 from src.models.base_model import Base
+from src.models.core_models import get_user_db
+from src.auth.user import get_user_manager, UserManager, auth_backend
+from src.schemas.auth_schemas import UserCreate
+from src.config.auth.strategy import get_jwt_strategy
 
 environ["TESTING"] = "True"
-settings = get_db_settings()
 
-db_instance = Database(settings.database_url)
+json = UserCreate(
+        email="zakharlepskie@gmail.com",
+        tg_id="1836141330",
+        password="adminpwd",
+        is_active=True,
+        is_superuser=True,
+        is_verified=True,
+)
 
 
 @pytest.fixture(scope="function")
 async def client():
+    """
+    Подключение к асинхронному клиенту
+
+    :return:
+    """
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url=f"http://test"
@@ -27,24 +39,27 @@ async def client():
 
 
 @pytest.fixture(scope="session")
-async def session():
-    async with db_instance.engine.begin() as connection:
-
-        async with db_instance.session_factory(bind=connection) as session:
-            yield session
-            await session.flush()
-            await session.rollback()
-
-# @pytest.fixture(scope="session")
-# async def create_migrations():
-#     db = Database(settings.database_url, settings.DB_ECHO_LOG)
-#
-#     config = Config("alembic.ini")
-#     config.set_main_option("script_location", "migrations")
-#     config.set_main_option("sqlalchemy.url", settings.database_url)
-#     upgrade(config, "head")
-#     yield
-#     downgrade(config, "base")
+async def prepare_db():
+    async with db_helper.engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+    async with db_helper.engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
 
 
+@pytest.fixture(scope="session")
+async def session(prepare_db):
+    """
+    Подключение к сессии
 
+    :return:
+    """
+    session_factory = db_helper.session_factory
+    session = session_factory()
+    yield session
+    await session.close()
+
+
+@pytest.fixture(scope="function")
+async def authorized_client(client):
+    ...

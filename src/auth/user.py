@@ -6,10 +6,10 @@ from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin, schemas, m
 from fastapi_users.authentication import AuthenticationBackend
 from fastapi_users.db import SQLAlchemyUserDatabase
 
-from ..models.core_models import User, get_user_db
-from ..config.auth.strategy import get_jwt_strategy
-from ..config.auth.transport import cookie_transport
-from ..config.auth_config import get_auth_settings
+from src.models.core_models import User, get_user_db
+from src.config.auth.strategy import get_jwt_strategy
+from src.config.auth.transport import cookie_transport
+from src.config.auth_config import get_auth_settings
 
 settings = get_auth_settings()
 
