@@ -28,6 +28,17 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
 
     busy_times: Mapped[List["ReservationModel"]] = relationship(back_populates='user',
                                                                 lazy='selectin')
+    
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "email": self.email,
+            "is_active": self.is_active,
+            "is_superuser": self.is_superuser,
+            "is_verified": self.is_verified,
+            "tg_id": self.tg_id
+        }
 
     @property
     def is_authenticated(self):

@@ -1,0 +1,9 @@
+.git
+.cache
+*.md
+!README*.md
+README-secret.md
+**/*.class
+*.example
+**/*.pyc
+.venv/

@@ -6,13 +6,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from logging_setup import LoggerSetup
 from src.config.project_config import get_settings
 from src.routes import get_apps_router
 
-logger_setup = LoggerSetup()
 
-LOGGER = logging.getLogger(__name__)
 
 
 def get_application() -> FastAPI:
@@ -24,14 +21,6 @@ def get_application() -> FastAPI:
         version=settings.VERSION,
     )
 
-    @application.on_event("startup")
-    async def startup():
-        LOGGER.info("--- Start up App ---")
-
-
-    @application.on_event("shutdown")
-    async def shutdown():
-        LOGGER.info("--- Shutdown App ---")
 
     application.include_router(get_apps_router())
 

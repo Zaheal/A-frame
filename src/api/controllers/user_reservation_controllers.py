@@ -1,11 +1,12 @@
 from fastapi import APIRouter, HTTPException, Cookie, Depends, Request
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT, HTTP_401_UNAUTHORIZED
 
-from ...schemas.base_schemas import SReservationRead, SReservationAdd
-from ...services.reservation_service import ReservationService
-from ...utils.dependencies import UOWDep
-from ...auth.user import current_active_user
-from ...models.core_models import User
+from src.schemas.base_schemas import SReservationRead, SReservationAdd
+from src.services.reservation_service import ReservationService
+from src.utils.dependencies import UOWDep
+from src.auth.user import current_active_user
+from src.models.core_models import User
+from src.language.ru_lang import Dictionary
 
 router = APIRouter(tags=['choose'])
 
@@ -64,7 +65,7 @@ async def create_reservation(uow: UOWDep,
             if user_id:
                 return await ReservationService().add_reservation(uow, reservation, user_id)
             else:
-                raise NameError("Прошу перейдите на главную страницу")
+                raise NameError(Dictionary["to_homepage"])
         else:
             return await ReservationService().add_reservation(uow, reservation, user.id)
     except Exception as e:

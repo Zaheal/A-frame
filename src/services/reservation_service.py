@@ -3,9 +3,9 @@ from typing import Optional
 
 from starlette.status import HTTP_403_FORBIDDEN
 
-from ..schemas.base_schemas import SReservationAdd, SReservationEdit, SReservation
-from ..utils.unitofwork import IUnitOfWork
-from ..auth.user import current_superuser
+from src.schemas.base_schemas import SReservationAdd, SReservationEdit, SReservation
+from src.utils.unitofwork import IUnitOfWork
+from src.auth.user import current_superuser
 
 
 class ReservationService:

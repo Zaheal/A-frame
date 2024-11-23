@@ -10,7 +10,11 @@ from src.models.core_models import User, get_user_db
 from src.config.auth.strategy import get_jwt_strategy
 from src.config.auth.transport import cookie_transport
 from src.config.auth_config import get_auth_settings
+from src.utils.email import send_email_confirm
+from src.config.redis_config import get_redis_settings
+from src.language.ru_lang import Dictionary
 
+redis_settings = get_redis_settings()
 settings = get_auth_settings()
 
 
@@ -18,9 +22,20 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     reset_password_token_secret = settings.RESET_PASSWORD_TOKEN_SECRET
     verification_token_secret = settings.VERIFICATION_TOKEN_SECRET
 
+    async def on_after_request_verify(self, user, token, request = None):
+        activation_url = request.url_for("verify:verify", token=token)
+        await send_email_confirm(email_to=user.email, body=Dictionary["confirm_email"] + f" {activation_url}")
+        
+
+    async def on_after_forgot_password(self, user, token, request = None):
+        actiovation_url = request.url_for("reset:edit_password", token=token)
+        await send_email_confirm(email_to=user.email, body=Dictionary["reset_pwd"] + f" {actiovation_url}")
+
+
     async def create(self,
                      user_create: schemas.UC,
-                     safe: bool = False, request: Optional[Request] = None,
+                     safe: bool = False, 
+                     request: Optional[Request] = None,
                      user_id: str | None = None
                      ) -> models.UP:
         """

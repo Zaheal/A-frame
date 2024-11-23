@@ -24,8 +24,8 @@ async def set_user_id_in_cookie(
     try:
         if user_id is None:
             user_id = uuid.uuid4()
-            response.set_cookie(key="user_id", value=user_id)
-        return None
+            response.set_cookie(key="user_id", value=user_id, httponly=True, path="/", samesite="lax")
+        return user_id
     except Exception as e:
         return HTTPException(HTTP_400_BAD_REQUEST, e)
 

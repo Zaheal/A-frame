@@ -1,5 +1,5 @@
-from ..schemas.auth_schemas import UserUpdate, UserCreate
-from ..utils.unitofwork import IUnitOfWork
+from src.schemas.auth_schemas import UserUpdate, UserCreate
+from src.utils.unitofwork import IUnitOfWork
 
 
 class UserService:

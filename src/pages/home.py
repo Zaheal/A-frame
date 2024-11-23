@@ -11,7 +11,7 @@ router = APIRouter(tags=['pages'])
 @router.get("/", response_class=HTMLResponse)
 def homepage(
         request: Request,
-        operations=Depends(set_user_id_in_cookie)
+        user_id = Depends(set_user_id_in_cookie),
         ):
     """
 
@@ -20,4 +20,5 @@ def homepage(
     :return:
     """
 
-    return templates.TemplateResponse(request, "index.html")
+    return templates.TemplateResponse(request, "index.html", context={"data": user_id})
+
