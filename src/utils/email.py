@@ -2,12 +2,11 @@ from pathlib import Path
 
 from fastapi_mail import ConnectionConfig, FastMail, MessageSchema
 
-from fastapi import BackgroundTasks
 from fastapi.responses import JSONResponse
 
 from src.config.email_config import get_config_email
 from src.language.ru_lang import Dictionary
-
+from src.utils.worker import celery
 
 settings = get_config_email()
 
@@ -24,28 +23,18 @@ conf = ConnectionConfig(
 )
 
 
-async def send_in_background_confirm(
-    background_tasks: BackgroundTasks, email_to: str, body: dict) -> JSONResponse:
-    message = MessageSchema(
-        subject=Dictionary["message_subject"],
-        recipients=[email_to],
-        body=body,
-        subtype='html',
-    )    
-    fm = FastMail(conf)
-    background_tasks.add_task(
-       fm.send_message, message)
-    return JSONResponse(status_code=200, content={"message": "email has been sent"})
-
-
-async def send_email_confirm(email_to: str, body: dict) -> JSONResponse:
-    message = MessageSchema(
-        subject=Dictionary["message_subject"],
-        recipients=[email_to],
-        body=body,
-        subtype='html',
-    )
-    
-    fm = FastMail(conf)
-    await fm.send_message(message)
-    return JSONResponse(status_code=200, content={"message": "email has been sent"})
+@celery.task(bind=True, max_retries=3, default_retry_delay=60)
+async def send_email(self, email_to: str, body: dict) -> JSONResponse:
+    try:
+        message = MessageSchema(
+            subject=Dictionary["message_subject"],
+            recipients=[email_to],
+            body=body,
+            subtype='html',
+        )
+        
+        fm = FastMail(conf)
+        await fm.send_message(message)
+        return JSONResponse(status_code=200, content={"message": "email has been sent"})
+    except Exception as e:
+        raise self.retry(exc=e, contdown=5)

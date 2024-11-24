@@ -22,7 +22,7 @@ services:
       - "5432:5432"
 
   redis:
-    image: redis:latest
+    image: redis:7.4.1
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - REDIS_USER=${REDIS_USER}
@@ -36,5 +36,3 @@ services:
       timeout: 10s
       retries: 5
     restart: unless-stopped
-    volumes:
-      - ./redisdata:/data

@@ -1,5 +1,5 @@
-from ..models.core_models import HouseModel
-from ..utils.sqlalchemy_repository import SqlAlchemyRepository
+from src.models.core_models import HouseModel
+from src.utils.sqlalchemy_repository import SqlAlchemyRepository
 
 
 class HousesRepository(SqlAlchemyRepository):
