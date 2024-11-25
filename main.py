@@ -1,5 +1,4 @@
-import logging
-
+from contextlib import asynccontextmanager
 import uvicorn
 
 from fastapi import FastAPI
@@ -8,8 +7,17 @@ from fastapi.staticfiles import StaticFiles
 
 from src.config.project_config import get_settings
 from src.routes import get_apps_router
+from src.logger import get_logger
 
 
+logger = get_logger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("Application startapp")
+    yield
+    logger.info("Aplication shutdown")
 
 
 def get_application() -> FastAPI:
@@ -19,6 +27,7 @@ def get_application() -> FastAPI:
         title=settings.PROJECT_NAME,
         debug=settings.DEBUG,
         version=settings.VERSION,
+        lifespan=lifespan,
     )
 
 

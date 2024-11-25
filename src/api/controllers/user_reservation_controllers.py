@@ -7,8 +7,10 @@ from src.utils.dependencies import UOWDep
 from src.auth.user import current_active_user
 from src.models.core_models import User
 from src.language.ru_lang import Dictionary
+from src.logger import get_logger
 
 router = APIRouter(tags=['choose'])
+logger = get_logger(__name__)
 
 
 @router.get("/reservations/{house_id}", response_model=list[SReservationRead])
@@ -22,8 +24,11 @@ async def get_house_reservations(uow: UOWDep, house_id: int) -> list[SReservatio
     :return:
     """
     try:
-        return await ReservationService().get_reservations(uow, house_id=house_id)
+        result = await ReservationService().get_reservations(uow, house_id=house_id)
+        logger.info("get_house_reservations successful")
+        return result
     except Exception as e:
+        logger.error("get_house_reservation failed", house_id=house_id, exc_info=e)
         return HTTPException(HTTP_400_BAD_REQUEST, e)
 
 
@@ -37,8 +42,11 @@ async def get_user_reservations(uow: UOWDep, user_id: str | None = Cookie(defaul
     :param user_id:
     """
     try:
-        return await ReservationService().get_reservations(uow, user_id=user_id)
+        result = await ReservationService().get_reservations(uow, user_id=user_id)
+        logger.info("get_user_reservations successful")
+        return result
     except Exception as e:
+        logger.error("get_user_reservations failed", user_id=user_id, exc_info=e)
         return HTTPException(HTTP_400_BAD_REQUEST, e)
 
 
@@ -63,12 +71,17 @@ async def create_reservation(uow: UOWDep,
     try:
         if user is None:
             if user_id:
-                return await ReservationService().add_reservation(uow, reservation, user_id)
+                result = await ReservationService().add_reservation(uow, reservation, user_id)
+                logger.info("create_reservation successful noneverify user")
+                return result
             else:
                 raise NameError(Dictionary["to_homepage"])
         else:
-            return await ReservationService().add_reservation(uow, reservation, user.id)
+            result = await ReservationService().add_reservation(uow, reservation, user.id)
+            logger.info("create_reservation successful verify user")
+            return result
     except Exception as e:
+        logger.error("create_reservation failed", exc_info=e)
         return HTTPException(HTTP_400_BAD_REQUEST, e)
 
 
@@ -83,8 +96,11 @@ async def delete_reservation(uow: UOWDep, reservation_id: int, user_id: str | No
     :return:
     """
     try:
-        return await ReservationService().remove_reservation(uow, reservation_id, user_id)
+        result = await ReservationService().remove_reservation(uow, reservation_id, user_id)
+        logger.info("delete_reservation successful")
+        return result
     except Exception as e:
+        logger.error("delete_reservation failed", user_id=user_id, exc_info=e)
         raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
