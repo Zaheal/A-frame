@@ -15,7 +15,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import Date
 
 from .base_model import Base
-from ..database.db import db_helper
+from src.database.db import db_helper
 
 
 class VarOfPaid(str, enum.Enum):
@@ -39,6 +39,10 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
             "is_verified": self.is_verified,
             "tg_id": self.tg_id
         }
+    
+    
+    def get_hashed_pwd(self):
+        return self.hashed_password
 
     @property
     def is_authenticated(self):

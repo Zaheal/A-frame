@@ -1,23 +1,40 @@
 from contextlib import asynccontextmanager
 import uvicorn
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from starlette.status import HTTP_400_BAD_REQUEST
+from aiogram.types import Update
 
 from src.config.project_config import get_settings
+from src.config.bot_config import get_config_bot
 from src.routes import get_apps_router
 from src.logger import get_logger
 
+from tg_bot.bot import bot, dp, start_bot, stop_bot
+from tg_bot.handlers import router
+
 
 logger = get_logger(__name__)
-
+bot_settings = get_config_bot()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("Application startapp")
+    logger.info("Application startup")
+    dp.include_router(router)
+    await start_bot()
+    webhook_url = bot_settings.get_webhook_url()
+    await bot.set_webhook(url=webhook_url,
+                          allowed_updates=dp.resolve_used_update_types(),
+                          drop_pending_updates=True
+                          )
+    logger.info(f"Webhook set to {webhook_url}")
     yield
     logger.info("Aplication shutdown")
+    await bot.delete_webhook()
+    await stop_bot()
+    logger.info("Webhook deleted")
 
 
 def get_application() -> FastAPI:
@@ -30,8 +47,19 @@ def get_application() -> FastAPI:
         lifespan=lifespan,
     )
 
-
     application.include_router(get_apps_router())
+    
+
+    @application.post("/webhook")
+    async def webhook(request: Request) -> None:
+        try:
+            update = Update.model_validate(await request.json(), context={"bot": bot})
+            await dp.feed_webhook_update(bot=bot, update=update)
+            logger.info("Update processed")
+        except Exception as e:
+            logger.error("Webhook error", exc_info=e)
+            return HTTPException(HTTP_400_BAD_REQUEST, e)
+        
 
     application.mount(f"{settings.TEMPLATE_URL}static", StaticFiles(directory=f"{settings.TEMPLATE_URL}static"), name='static')
 

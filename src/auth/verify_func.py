@@ -7,6 +7,9 @@ from fastapi_users import exceptions, models, schemas
 from fastapi_users.manager import BaseUserManager, UserManagerDependency
 from fastapi_users.router.common import ErrorCode, ErrorModel
 
+from tg_bot.bot import bot
+from tg_bot.keyboards.kbs import main_keyboard
+
 
 def get_verify_router(
     get_user_manager: UserManagerDependency[models.UP, models.ID],
@@ -70,6 +73,9 @@ def get_verify_router(
     ):
         try:
             user = await user_manager.verify(token, request)
+            tg_id = int(user.tg_id)
+            if tg_id != 0:
+                await bot.send_message(chat_id=tg_id, text="Ваша почта подтверждена, чем могу помочь?", reply_markup=main_keyboard())
             return schemas.model_validate(user_schema, user)
         except (exceptions.InvalidVerifyToken, exceptions.UserNotExists):
             raise HTTPException(

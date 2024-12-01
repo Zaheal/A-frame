@@ -18,7 +18,7 @@ class SqlAlchemyRepository(AbstractRepository):
             await session.commit()
             return res.scalar_one()
 
-    async def update(self, pk: int, data: dict) -> int:
+    async def update(self, pk: str, data: dict) -> int:
         async with self._session_factory as session:
             stmt = update(self.model).values(**data).filter_by(id=pk).returning(self.model.id)
             res = await session.execute(stmt)

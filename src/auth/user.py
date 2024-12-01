@@ -13,6 +13,7 @@ from src.config.auth_config import get_auth_settings
 from src.utils.email import send_email
 from src.config.redis_config import get_redis_settings
 from src.language.ru_lang import Dictionary
+from src.utils.pwd_validate import validate_password
 
 redis_settings = get_redis_settings()
 settings = get_auth_settings()
@@ -52,7 +53,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         :raises UserAlreadyExists: A user already exists with the same e-mail.
         :return: A new user.
         """
-        await self.validate_password(user_create.password, user_create)
+        await self.validate_password(user_create.password, user_create.email)
 
 
         existing_user = await self.user_db.get_by_email(user_create.email)
@@ -74,6 +75,14 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         await self.on_after_register(created_user, request)
 
         return created_user
+
+
+    async def validate_password(
+        self,
+        password: str,
+        email: str,
+    ) -> None:
+        await validate_password(password, email)
 
 
 async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):

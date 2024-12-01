@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException, Cookie, Depends, Request
-from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT, HTTP_401_UNAUTHORIZED
+from fastapi import APIRouter, HTTPException, Cookie, Depends
+from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 
 from src.schemas.base_schemas import SReservationRead, SReservationAdd
 from src.services.reservation_service import ReservationService
@@ -35,9 +35,8 @@ async def get_house_reservations(uow: UOWDep, house_id: int) -> list[SReservatio
 @router.get("/my/reservations")
 async def get_user_reservations(uow: UOWDep, user_id: str | None = Cookie(default=None)) -> list[SReservationRead] | None:
     """
-    Возвращает список броней пользователя, хранящиеся в бд 30 дней
+    Возвращает список броней пользователя
 
-    TODO автоматически удалять бронь из бд после 30 дней окончания резервирования
     :param uow:
     :param user_id:
     """
