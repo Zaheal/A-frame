@@ -20,6 +20,8 @@ async def set_user_id_in_cookie(
     """
     В Cookies записывается uuid пользователя, если его ещё нет
 
+    Задумка, что бронировать можно без регистрации
+
     :param user_id:
     :param response:
     """
@@ -40,11 +42,11 @@ async def get_selected_house(
         house_id: int
         ):
     """
-    При выборе домика на homepage, показывает информацию о нём
+    Информация о выбранном домике по его id 
 
     :param uow:
     :param house_id:
-    :return:
+    :return: 
     """
     try:
         result = await HouseService().get_house(uow, house_id)

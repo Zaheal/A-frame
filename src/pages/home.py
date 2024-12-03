@@ -14,6 +14,7 @@ def homepage(
         user_id = Depends(set_user_id_in_cookie),
         ):
     """
+    Моя попытка связать front и back )))
 
     :param request:
     :param operations:
