@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     DEBUG: bool
     CORS_ALLOWED_ORIGINS: str
     TEMPLATE_URL: str
+    SITE: str
 
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
 

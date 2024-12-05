@@ -58,7 +58,6 @@ body::-webkit-scrollbar {
 ._container {
     max-width: 1152px;
     margin: 0 auto;
-    padding: 0 26px;
 }
 
 ._container-2{
@@ -70,8 +69,9 @@ body::-webkit-scrollbar {
 
 .header {
     padding: 0px 26px;
-    max-width: 1152px;
-    margin: 0 auto;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
 }
 
 .header-container {
@@ -81,7 +81,6 @@ body::-webkit-scrollbar {
     border-radius: 35px;
     justify-content: space-between;
     height: 69px;
-    z-index: 10;
     margin-top: 26px;
     position: relative;
 }
@@ -198,8 +197,8 @@ body::-webkit-scrollbar {
 
 /* ---MAIN----------------------------------------- */
 
-.main {
-}
+/* .main {
+} */
 
 /* ---SECTION-1---------------------------------------- */
 
@@ -212,7 +211,7 @@ body::-webkit-scrollbar {
     background-color: #D9D9D9;
     /* border: 1px solid #000; */
     box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
-    margin-top: -95px;
+    margin-top: 0px;
 }
 
 .section-1__title {
@@ -307,8 +306,8 @@ body::-webkit-scrollbar {
     transition: .3s ease-in-out;
 }
 
-.slider__item {
-}
+/* .slider__item {
+} */
 
 .slider__item_box {
     width: 300px;
@@ -468,9 +467,8 @@ body::-webkit-scrollbar {
 
 /* ---SECTION-3---------------------------------------- */
 
-.section-3 {
-    
-}
+/* .section-3 {
+} */
 
 .section-3__text {
     font-size: 16px;
@@ -563,7 +561,8 @@ body::-webkit-scrollbar {
 }
 
 .footer__policy_link {
-    position: absolute;
+    position: fixed;
+    z-index: 99;
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -572,7 +571,7 @@ body::-webkit-scrollbar {
     background-position: center center;
     right: 40px;
     transform: rotate(90deg);
-    top: -70px;
+    bottom: 70px;
 }
 
 /* ---820PX---------------------------------------- */

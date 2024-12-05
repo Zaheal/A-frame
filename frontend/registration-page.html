@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="registration-page-style.css">
+    <link rel="stylesheet" href="{{ url_for( 'static', path='/registration-page-style.css' ) }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
 <body>
     <header class="header">
         <div class="header-container">
-            <a class="header__logo" href="">
+            <a class="header__logo" href="{{ url_for( 'homepage' ) }}">
                 <div class="header__logo_img"></div>
                 <p class="header__logo_text">
                     A-Frame.Kam
@@ -27,17 +27,17 @@
             <div class="header__nav">
                 <ul class="header__nav_list">
                     <li class="header__nav_list-item">
-                        <a class="header__nav_list-link" href="homepage.html#contacts">
+                        <a class="header__nav_list-link" href="{{ url_for( 'homepage' ) }}#contacts">
                             Контакты
                         </a>
                     </li>
                     <li class="header__nav_list-item">
-                        <a class="header__nav_list-link" href="homepage.html#gallery">
+                        <a class="header__nav_list-link" href="{{ url_for( 'homepage' ) }}#gallery">
                             Галерея
                         </a>
                     </li>
                     <li class="header__nav_list-item">
-                        <a class="header__nav_list-link" href="homepage.html">
+                        <a class="header__nav_list-link" href="{{ url_for( 'homepage' ) }}">
                             На главную
                         </a>
                     </li>
@@ -48,9 +48,9 @@
                 <div class="icon-line"></div>
                 <div class="icon-line"></div>
                 <div class="menu-container">
-                    <a class="menu-container__link" href="homepage.html#contacts">Контакты</a>
-                    <a class="menu-container__link" href="homepage.html#gallery">Галерея</a>
-                    <a class="menu-container__link" href="homepage.html">На главную</a>
+                    <a class="menu-container__link" href="{{ url_for( 'homepage' ) }}#contacts">Контакты</a>
+                    <a class="menu-container__link" href="{{ url_for( 'homepage' ) }}#gallery">Галерея</a>
+                    <a class="menu-container__link" href="{{ url_for( 'homepage' ) }}">На главную</a>
                 </div>  
             </div>
         </div>
@@ -84,7 +84,7 @@
       <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
       <!-- Slick -->
       <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-      <script src="menu.js"></script>
-      <script src="main.js"></script>
+      <script src="{{ url_for( 'static', path='/menu.js' ) }}"></script>
+      <script src="{{ url_for( 'static', path='/main.js' ) }}"></script>
 </body>
 </html>

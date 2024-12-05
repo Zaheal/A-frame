@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="homepage-style.css">
+    <link rel="stylesheet" href="{{ url_for( 'static', path='/homepage-style.css' ) }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
 <body>
     <header class="header">
         <div class="header-container _container">
-            <a class="header__logo" href="">
+            <a class="header__logo" href="{{ url_for('homepage') }}">
                 <div class="header__logo_img"></div>
                 <p class="header__logo_text">
                     A-Frame.Kam
@@ -63,11 +63,11 @@
             <h2 class="section-1__text">
                 Погрузитесь в мир уникальных деревянных домиков!
             </h2>
-            <form action="" class="section-1__form">
                 <button class="section-1__form_button">
+                    <a href="#choose">
                     Забронировать
+                    </a>
                 </button>
-            </form>
         </section>
         <section class="section-2">
             <div class="section-2__text-block">
@@ -275,28 +275,28 @@
                 </p>
             </div>
         </section>
-        <section class="section-5 _container-2 _offset">
+        <section class="section-5 _container-2 _offset" id="choose">
             <h1 class="section-5__title">
                 Домики
             </h1>
             <div class="section-5__photo-block">
-                <a href="house-page.html" class="section-5__photo-block_link">
-                    <img src="img/jpg/section-5_img-1.jpg" alt="" class="section-5__photo-block_img">
+                <a href="{{ url_for( 'house_page', house_id=1 ) }}" class="section-5__photo-block_link">
+                    <img src="img/jpg/section-5_img-1.jpg" alt="Ретро" class="section-5__photo-block_img">
                 </a>
-                <a href="error-page.html" class="section-5__photo-block_link">
-                    <img src="img/jpg/section-5_img-2.jpg" alt="" class="section-5__photo-block_img">
+                <a href="{{ url_for( 'house_page', house_id=2 ) }}" class="section-5__photo-block_link">
+                    <img src="img/jpg/section-5_img-2.jpg" alt="Инстаграм" class="section-5__photo-block_img">
                 </a>
-                <a href="" class="section-5__photo-block_link">
-                    <img src="img/jpg/section-5_img-3.jpg" alt="" class="section-5__photo-block_img">
+                <a href="{{ url_for( 'house_page', house_id=4 ) }}" class="section-5__photo-block_link">
+                    <img src="img/jpg/section-5_img-3.jpg" alt="Pass" class="section-5__photo-block_img">
                 </a>
-                <a href="" class="section-5__photo-block_link">
-                    <img src="img/jpg/section-5_img-4.jpg" alt="" class="section-5__photo-block_img">
+                <a href="{{ url_for( 'house_page', house_id=3 ) }}" class="section-5__photo-block_link">
+                    <img src="img/jpg/section-5_img-4.jpg" alt="Море" class="section-5__photo-block_img">
                 </a>
             </div>
             <p class="section-5__text">
                 Следите за нами
             </p>
-            <a href="" class="section-5__socialmedia_link">
+            <a href="https://www.instagram.com/aframe_kam" class="section-5__socialmedia_link">
                 <img src="img/svg/logo-instagram.svg" alt="">
             </a>
         </section>
@@ -308,17 +308,17 @@
             </h1>
             <ul class="footer-block__list">
                 <li class="footer-block__list_item">
-                    Телефон: +7***
+                    Телефон: +7 (988) 026-64-82
                 </li>
                 <li class="footer-block__list_item">
-                    Почта: ***@gmail.com
+                    Почта: a-frame.kam@ya.ru
                 </li>
                 <li class="footer-block__list_item">
                     Адрес: Камышин, СНТ "Березки 2", дом 12
                 </li>
             </ul>
         <div class="yandex-map__block">
-            <iframe class="yandex-map" src="https://yandex.ru/map-widget/v1/?um=constructor%3A8ad2787c90ccb26ad39c60f25f70911ca68f2628070eed9acf72fdbcb84f36f0&amp;source=constructor" width="640" height="350" frameborder="0"></iframe>
+            <iframe class="yandex-map" src="https://yandex.ru/map-widget/v1/?um=constructor%3A80712342647a7cbb5b677e7a07cabceb3733f2b820165c1a41e616810838b447&amp;source=constructor" width="640" height="350" frameborder="0"></iframe>
         </div>
         </div>
         <div class="footer__policy">
@@ -332,7 +332,7 @@
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <!-- Slick -->
     <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-    <script src="menu.js"></script>
-    <script id="sliderJS" src="main.js"></script>
+    <script src="{{ url_for( 'static', path='/menu.js' ) }}"></script>
+    <script id="sliderJS" src="{{ url_for( 'static', path='/main.js' ) }}"></script>
 </body>
 </html>

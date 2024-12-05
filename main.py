@@ -11,6 +11,7 @@ from src.config.project_config import get_settings
 from src.config.bot_config import get_config_bot
 from src.routes import get_apps_router
 from src.logger import get_logger
+from src.middlewares.cookies_middleware import CookiesMiddleware
 
 from tg_bot.bot import bot, dp, start_bot, stop_bot
 from tg_bot.handlers import router
@@ -61,7 +62,7 @@ def get_application() -> FastAPI:
             return HTTPException(HTTP_400_BAD_REQUEST, e)
         
 
-    application.mount(f"{settings.TEMPLATE_URL}static", StaticFiles(directory=f"{settings.TEMPLATE_URL}static"), name='static')
+    application.mount("/", StaticFiles(directory="frontend"), name='static')
 
     application.add_middleware(
         CORSMiddleware,
@@ -70,6 +71,7 @@ def get_application() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    application.add_middleware(CookiesMiddleware)
     return application
 
 

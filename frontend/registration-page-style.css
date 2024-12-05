@@ -206,6 +206,7 @@ body::-webkit-scrollbar {
 /* ---MAIN----------------------------------------- */
 
 .main {
+    min-height: 100%;
 }
 
 /* ---SECTION-1---------------------------------------- */
@@ -247,6 +248,7 @@ body::-webkit-scrollbar {
     display: flex;
     justify-content: center;
     margin: 0 auto;
+    padding-bottom: 51px;
 }
 
 .section-2__input-block {
@@ -344,6 +346,14 @@ body::-webkit-scrollbar {
     }
 }
 
+/* ---620PX---------------------------------------- */
+
+@media (max-width: 619px) {
+    .section-2 {
+        padding-bottom: 30px;
+    }
+}
+
 /* ---FOOTER---------------------------------------- */
 
 .footer {
@@ -356,6 +366,7 @@ body::-webkit-scrollbar {
     height: 51px;
     background-color: #F5F5F5;
     position: relative;
+    margin-top: -51px;
 }
 
 .footer__policy_text {
@@ -366,12 +377,12 @@ body::-webkit-scrollbar {
 
 /* ---768PX---------------------------------------- */
 
-@media (max-width: 815px) {
+/* @media (max-width: 815px) {
     .footer {
         position: absolute;
         bottom: 0;
     }
-}
+} */
 
 /* ---620PX---------------------------------------- */
 
@@ -379,6 +390,7 @@ body::-webkit-scrollbar {
 
     .footer__policy {
         height: 30px;
+        margin-top: -30px;
     }
 
     .footer__policy_text {

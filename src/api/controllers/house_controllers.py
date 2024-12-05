@@ -1,6 +1,4 @@
-import uuid
-
-from fastapi import APIRouter, HTTPException, Response, Cookie
+from fastapi import APIRouter, HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST
 
 from src.services.house_service import HouseService
@@ -12,37 +10,13 @@ router = APIRouter(tags=["home"])
 logger = get_logger(__name__)
 
 
-@router.get("/home")
-async def set_user_id_in_cookie(
-        response: Response,
-        user_id: str | None = Cookie(default=None)
-        ):
-    """
-    В Cookies записывается uuid пользователя, если его ещё нет
-
-    Задумка, что бронировать можно без регистрации
-
-    :param user_id:
-    :param response:
-    """
-    try:
-        if user_id is None:
-            user_id = uuid.uuid4()
-            response.set_cookie(key="user_id", value=user_id, httponly=True, path="/", samesite="lax")
-        logger.info("set_user_id_in_cookie successful")
-        return user_id
-    except Exception as e:
-        logger.error("set_user_id_in_cookie failed", exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, e)
-
-
 @router.get("/house/{house_id}", response_model=SHouseRead)
 async def get_selected_house(
         uow: UOWDep,
         house_id: int
         ):
     """
-    Информация о выбранном домике по его id 
+    Information about house
 
     :param uow:
     :param house_id:
