@@ -55,10 +55,14 @@ services:
   celery_worker:
     container_name: celery_worker
     build: .
-    command: celery -A celery_worker worker --pool=solo --loglevel=info
+    command: celery -A src.utils.worker.celery worker --pool=gevent --loglevel=info
+    volumes:
+      - .:/app
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
     depends_on:
       - redis
-      - app
 
   flower:
     container_name: flower

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 
-from src.schemas.base_schemas import SReservationAdd, SReservationEdit, SReservationRead
+from src.schemas.base_schemas import SReservationAdd, SReservationEdit
 from src.services.reservation_service import ReservationService
 from src.utils.dependencies import UOWDep
 from src.auth.user import current_superuser
@@ -11,7 +11,7 @@ router = APIRouter(tags=['admin/reservation'])
 logger = get_logger(__name__)
 
 
-@router.post("/reservation/add", dependencies=[Depends(current_superuser)])
+@router.post("/reservation/add")
 async def create_reservation(uow: UOWDep, reservation: SReservationAdd):
     try:
         result = await ReservationService().add_reservation(uow, reservation)
@@ -22,7 +22,7 @@ async def create_reservation(uow: UOWDep, reservation: SReservationAdd):
         return HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
-@router.get("/reservations/", response_model=list[SReservationRead], dependencies=[Depends(current_superuser)])
+@router.get("/reservations")
 async def list_reservations(uow: UOWDep):
     try:
         result = await ReservationService().get_reservations(uow)

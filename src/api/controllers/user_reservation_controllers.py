@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Cookie, Depends
+from fastapi import APIRouter, HTTPException, Depends
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 
 from src.schemas.base_schemas import SReservationRead, SReservationAdd
@@ -6,11 +6,12 @@ from src.services.reservation_service import ReservationService
 from src.utils.dependencies import UOWDep
 from src.auth.user import current_active_user
 from src.models.core_models import User
-from src.language.ru_lang import Dictionary
 from src.logger import get_logger
+from src.config.auth.strategy import get_jwt_strategy
 
 router = APIRouter(tags=['choose'])
 logger = get_logger(__name__)
+strategy = get_jwt_strategy()
 
 
 @router.get("/reservations/{house_id}", response_model=list[SReservationRead])
@@ -33,7 +34,7 @@ async def get_house_reservations(uow: UOWDep, house_id: int) -> list[SReservatio
 
 
 @router.get("/my/reservations")
-async def get_user_reservations(uow: UOWDep, user_id: str | None = Cookie(default=None)) -> list[SReservationRead] | None:
+async def get_user_reservations(uow: UOWDep, user: User = Depends(current_active_user)) -> list[SReservationRead] | None:
     """
     Возвращает список броней пользователя
 
@@ -41,11 +42,11 @@ async def get_user_reservations(uow: UOWDep, user_id: str | None = Cookie(defaul
     :param user_id:
     """
     try:
-        result = await ReservationService().get_reservations(uow, user_id=user_id)
+        result = await ReservationService().get_reservations(uow, user_id=user.id)
         logger.info("get_user_reservations successful")
         return result
     except Exception as e:
-        logger.error("get_user_reservations failed", user_id=user_id, exc_info=e)
+        logger.error(f"get_user_reservations failed {user}", exc_info=e)
         return HTTPException(HTTP_400_BAD_REQUEST, e)
 
 
@@ -53,39 +54,28 @@ async def get_user_reservations(uow: UOWDep, user_id: str | None = Cookie(defaul
 @router.post("/create/reservation")
 async def create_reservation(uow: UOWDep,
                              reservation: SReservationAdd,
-                             user_id: str | None = Cookie(default=None),
-                             user: User | None = Depends(current_active_user)
+                             user: User = Depends(current_active_user)
                              ):
     """
-    Создаёт бронь, если пользователь авторизирован получает данные из бд, а если нет,
-    то запрашивает почту и берёт id пользователя из Cookie
+    Создаёт бронь, если пользователь авторизирован получает данные из бд
 
 
     :param user:
-    :param user_id:
     :param uow:
     :param reservation:
     :return:
     """
     try:
-        if user is None:
-            if user_id:
-                result = await ReservationService().add_reservation(uow, reservation, user_id)
-                logger.info("create_reservation successful noneverify user")
-                return result
-            else:
-                raise NameError(Dictionary["to_homepage"])
-        else:
-            result = await ReservationService().add_reservation(uow, reservation, user.id)
-            logger.info("create_reservation successful verify user")
-            return result
+        result = await ReservationService().add_reservation(uow, reservation, user.id)
+        logger.info("create_reservation successful verify user")
+        return result
     except Exception as e:
         logger.error("create_reservation failed", exc_info=e)
         return HTTPException(HTTP_400_BAD_REQUEST, e)
 
 
-@router.delete("/delete/reservation/{reservation_id}", status_code=HTTP_204_NO_CONTENT)
-async def delete_reservation(uow: UOWDep, reservation_id: int, user_id: str | None = Cookie(default=None)) -> None:
+@router.post("/delete/reservation/{reservation_id}", status_code=HTTP_204_NO_CONTENT)
+async def delete_reservation(uow: UOWDep, reservation_id: int, user: User = Depends(current_active_user)) -> None:
     """
     Удаляет бронь
 
@@ -95,11 +85,11 @@ async def delete_reservation(uow: UOWDep, reservation_id: int, user_id: str | No
     :return:
     """
     try:
-        result = await ReservationService().remove_reservation(uow, reservation_id, user_id)
+        result = await ReservationService().remove_reservation(uow, reservation_id, user.id)
         logger.info("delete_reservation successful")
         return result
     except Exception as e:
-        logger.error("delete_reservation failed", user_id=user_id, exc_info=e)
+        logger.error(f"delete_reservation failed {user.email}", exc_info=e)
         raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 

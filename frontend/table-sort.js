@@ -53,21 +53,6 @@ function sortTable(n) {
                 break;
               }
             }
-            break;
-            case 3: // Оценка (по количеству желтых звезд)
-            let ratingX = x.querySelectorAll('img[data-color="yellow"]').length;
-            let ratingY = y.querySelectorAll('img[data-color="yellow"]').length;
-            if (dir == "asc") {
-              if (ratingX < ratingY) {
-                shouldSwitch = true;
-                break;
-              }
-            } else if (dir == "desc") {
-              if (ratingX > ratingY) {
-                shouldSwitch = true;
-                break;
-              }
-            }
             break;        
         }  
         if (shouldSwitch) {

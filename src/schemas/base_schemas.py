@@ -1,8 +1,7 @@
-import re
 from datetime import date
 import uuid
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 from .auth_schemas import User
 from ..models.core_models import VarOfPaid
@@ -12,25 +11,26 @@ class SHouse(BaseModel):
     id: int
     style: str
     color: str
-    air_conditioner: bool
-    place: int
     size: int
     cost: int
     location: str
-    bath: bool
+    add: str
+    description: str
 
     busy_times: list["SReservation"]
+    
+    class Config:
+        from_attributes = True
 
 
 class SHouseAdd(BaseModel):
     style: str
     color: str
-    air_conditioner: bool
-    place: int
     size: int
     cost: int
     location: str
-    bath: bool
+    add: str
+    description: str
 
 
 class SHouseEdit(SHouseAdd):
@@ -43,15 +43,12 @@ class SHouseRead(SHouseAdd):
 
 class SReservation(BaseModel):
     id: int
-    email: EmailStr
-    tg_id: int
     start: date
     end: date
     full_price: int
     was_paid: VarOfPaid = VarOfPaid.not_paid
 
     house_id: int
-    # user_uuid: uuid.UUID
     user_id: uuid.UUID
 
     house: "SHouse"
@@ -59,15 +56,12 @@ class SReservation(BaseModel):
 
 
 class SReservationAdd(BaseModel):
-    email: EmailStr
-    tg_id: int | None
     start: date
     end: date
     full_price: int
     was_paid: VarOfPaid = VarOfPaid.not_paid
 
     house_id: int
-    user_id: uuid.UUID
 
 
 class SReservationEdit(SReservationAdd):

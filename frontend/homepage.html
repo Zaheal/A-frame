@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for( 'static', path='/homepage-style.css' ) }}">
+    <link id="favicon" rel="icon" type="image/x-icon" href="/img/svg/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -37,9 +38,15 @@
                         </a>
                     </li>
                     <li class="header__nav_list-item">
-                        <a class="header__nav_list-link" href="login-page.html">
+                        {% if user.is_authenticated %}
+                        <a class="header__nav_list-link" href="{{ url_for('profile') }}">
+                            Профиль
+                        </a>
+                        {% else %}
+                        <a class="header__nav_list-link" href="{{ url_for('login') }}">
                             Войти
                         </a>
+                        {% endif %}
                     </li>
                 </ul>
             </div>
@@ -50,7 +57,15 @@
                 <div class="menu-container">
                     <a class="menu-container__link" href="#contacts">Контакты</a>
                     <a class="menu-container__link" href="#gallery">Галерея</a>
-                    <a class="menu-container__link" href="login-page.html">Войти</a>
+                    {% if user.is_authenticated %}
+                    <a class="header__nav_list-link" href="{{ url_for('profile') }}">
+                        Профиль
+                    </a>
+                    {% else %}
+                    <a class="header__nav_list-link" href="{{ url_for('login') }}">
+                        Войти
+                    </a>
+                    {% endif %}
                 </div>  
             </div>
         </div>
@@ -283,13 +298,13 @@
                 <a href="{{ url_for( 'house_page', house_id=1 ) }}" class="section-5__photo-block_link">
                     <img src="img/jpg/section-5_img-1.jpg" alt="Ретро" class="section-5__photo-block_img">
                 </a>
-                <a href="{{ url_for( 'house_page', house_id=2 ) }}" class="section-5__photo-block_link">
+                <a href="#" class="section-5__photo-block_link" title="Скоро">
                     <img src="img/jpg/section-5_img-2.jpg" alt="Инстаграм" class="section-5__photo-block_img">
                 </a>
-                <a href="{{ url_for( 'house_page', house_id=4 ) }}" class="section-5__photo-block_link">
+                <a href="#" class="section-5__photo-block_link" title="Скоро">
                     <img src="img/jpg/section-5_img-3.jpg" alt="Pass" class="section-5__photo-block_img">
                 </a>
-                <a href="{{ url_for( 'house_page', house_id=3 ) }}" class="section-5__photo-block_link">
+                <a href="#" class="section-5__photo-block_link" title="Скоро">
                     <img src="img/jpg/section-5_img-4.jpg" alt="Море" class="section-5__photo-block_img">
                 </a>
             </div>

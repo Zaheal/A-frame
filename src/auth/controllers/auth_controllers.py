@@ -1,16 +1,20 @@
 import uuid
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from src.schemas.auth_schemas import UserRead, UserCreate, UserUpdate
 from src.models.core_models import User
-from src.auth.user import get_user_manager, auth_backend
+from src.auth.user import get_user_manager, auth_backend, current_active_user
 from src.auth.my_fastapi_users import MyFastAPIUsers
+from src.auth.oauth import google_oauth_client
+from src.config.auth_config import get_auth_settings
 
 fastapi_users = MyFastAPIUsers[User, uuid.UUID](
     get_user_manager,
     [auth_backend],
 )
+
+settings = get_auth_settings()
 
 
 def get_auth_router() -> APIRouter:
@@ -18,6 +22,11 @@ def get_auth_router() -> APIRouter:
     router.include_router(
         fastapi_users.get_auth_router(backend=auth_backend),
         prefix="/auth/jwt",
+        tags=["auth"],
+    )
+    router.include_router(
+        fastapi_users.get_oauth_router(google_oauth_client, auth_backend, settings.VERIFICATION_TOKEN_SECRET, associate_by_email=True),
+        prefix="/auth/google",
         tags=["auth"],
     )
     router.include_router(

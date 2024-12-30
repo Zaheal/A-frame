@@ -1,15 +1,16 @@
 from typing import List
-from datetime import date, timedelta
+from datetime import date
 from uuid import UUID
 import enum
 
 from fastapi import Depends
 from fastapi_users.db import (
+    SQLAlchemyBaseOAuthAccountTableUUID,
     SQLAlchemyUserDatabase,
     SQLAlchemyBaseUserTableUUID,
 )
 
-from sqlalchemy import ForeignKey, String, Integer
+from sqlalchemy import ForeignKey, String, Integer, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import Date
@@ -23,8 +24,18 @@ class VarOfPaid(str, enum.Enum):
     not_paid = "not_paid"
 
 
+class OAuthAccount(SQLAlchemyBaseOAuthAccountTableUUID, Base):
+    pass
+
+
 class User(SQLAlchemyBaseUserTableUUID, Base):
+    created_at: Mapped[date] = mapped_column(Date(), server_default=func.current_date())
     tg_id: Mapped[int] = mapped_column(Integer, nullable=True)
+    number: Mapped[str] = mapped_column(String(length=10), nullable=True)
+    name: Mapped[str]
+    oauth_accounts: Mapped[list[OAuthAccount]] = relationship(
+        "OAuthAccount", lazy="joined"
+    )
 
     busy_times: Mapped[List["ReservationModel"]] = relationship(back_populates='user',
                                                                 lazy='selectin')
@@ -37,7 +48,9 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
             "is_active": self.is_active,
             "is_superuser": self.is_superuser,
             "is_verified": self.is_verified,
-            "tg_id": self.tg_id
+            "tg_id": self.tg_id,
+            "number": self.number,
+            "name": self.name
         }
     
     
@@ -54,7 +67,7 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
 
 
 async def get_user_db(session: AsyncSession = Depends(db_helper.get_db_session)):
-    yield SQLAlchemyUserDatabase(session, User)
+    yield SQLAlchemyUserDatabase(session, User, OAuthAccount)
 
 
 class HouseModel(Base):
@@ -62,12 +75,11 @@ class HouseModel(Base):
 
     style: Mapped[str]
     color: Mapped[str]
-    air_conditioner: Mapped[bool]
-    place: Mapped[int]
     size: Mapped[int]
     cost: Mapped[int]
     location: Mapped[str]
-    bath: Mapped[bool]
+    add: Mapped[str]
+    description: Mapped[str]
 
     busy_times: Mapped[List["ReservationModel"]] = relationship(back_populates='house',
                                                                 lazy='selectin')
@@ -76,9 +88,8 @@ class HouseModel(Base):
 class ReservationModel(Base):
     __tablename__ = 'reservations'
 
-    email: Mapped[str] = mapped_column(String(length=320))
-    start: Mapped[date] = mapped_column(Date(), server_default=f"{date.today()}")
-    end: Mapped[date] = mapped_column(Date(), server_default=f"{date.today() + timedelta(days=1)}")
+    start: Mapped[date] = mapped_column(Date())
+    end: Mapped[date] = mapped_column(Date())
     full_price: Mapped[int]
     was_paid: Mapped[str] = mapped_column(String(), default="not_paid")
 

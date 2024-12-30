@@ -73,9 +73,10 @@ def get_verify_router(
     ):
         try:
             user = await user_manager.verify(token, request)
-            tg_id = int(user.tg_id)
-            if tg_id != 0:
-                await bot.send_message(chat_id=tg_id, text="Ваша почта подтверждена, чем могу помочь?", reply_markup=main_keyboard())
+            if user.tg_id:
+                tg_id = int(user.tg_id)
+                if tg_id != 0:
+                    await bot.send_message(chat_id=tg_id, text="Ваша почта подтверждена, чем могу помочь?", reply_markup=main_keyboard())
             return schemas.model_validate(user_schema, user)
         except (exceptions.InvalidVerifyToken, exceptions.UserNotExists):
             raise HTTPException(

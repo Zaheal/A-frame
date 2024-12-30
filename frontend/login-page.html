@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for( 'static', path='/login-page-style.css' ) }}">
+    <link id="favicon" rel="icon" type="image/x-icon" href="/img/svg/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -60,25 +61,42 @@
             </h1>
         </section>
         <section class="section-2 _container">
-            <form class="section-2__input-block" action="profile-page.html">
-                <input class="section-2__input-block_input _contact" type="text" id="inputContact" placeholder="Почта или номер телефона">
-                <input class="section-2__input-block_input _password" type="text" id="inputPassword" placeholder="Пароль">
-                <button class="section-2__input-block_button">Войти</button>
-                <a href="" class="section-2__input-block_link">
-                    Войти с помощью
+            <form class="section-2__input-block" id="formData">
+                <input class="section-2__input-block_input _contact" type="email" name="username" placeholder="Почта" required>
+                <input class="section-2__input-block_input _password" type="password" name="password" placeholder="Пароль" required>
+                <button class="section-2__input-block_button" type="submit">Войти</button>
+                <div id="message"></div>
+                <a class="section-2__input-block_link" style="cursor: pointer;" href="{{ url_for('reset_password') }}">
+                    Забыли пароль? 
                 </a>
-                <div class="section-2__socialmedia-block">
-                    <a href="" class="section-2__socialmedia-block_link">
-                        <img class="section-2__socialmedia-block_img" src="img/svg/logo-google.svg" alt="">
-                    </a>
-                    <a href="" class="section-2__socialmedia-block_link">
-                        <img class="section-2__socialmedia-block_img" src="img/svg/logo-vk.svg" alt="">
-                    </a>
+                <script>
+                    const formElement = document.getElementById('formData');
+                    formElement.addEventListener('submit', async function(e) {
+                        event.preventDefault();
+        
+                        const formDates = new FormData(formElement);
+                        console.log(formDates)
+                        try {
+                            const response = await fetch(
+                            "/auth/jwt/login", {
+                                method: "POST",
+                                body: formDates
+                                })
+                                .catch(err => new Error(err))
+                                if (response.ok) {
+                                    window.location.href = "/";
+                                } 
+                            } catch (error) {
+                                document.getElementById("message").textContent = error.message
+                            }
+                    });
+                </script>
+                <div class="section-2__socialmedia-block">                     
                     <a href="" class="section-2__socialmedia-block_link">
                         <img class="section-2__socialmedia-block_img _logo-telegram" src="img/svg/logo-telegram.svg" alt="">
                     </a>
                 </div>
-                <a href="registration-page.html" class="section-2__input-block_link _registration">
+                <a href="{{ url_for('registration') }}" class="section-2__input-block_link _registration">
                     Зарегистрироваться
                 </a>
             </form>

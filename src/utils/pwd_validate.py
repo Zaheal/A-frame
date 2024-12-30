@@ -11,11 +11,7 @@ async def validate_password(password, email):
         raise InvalidPasswordException(
             reason="Password should be at least 8 characters"
         )
-    if email in password:
-        raise InvalidPasswordException(
-            reason="Password should not contain e-mail"
-        )
-    
+
 
 def verify_pwd(
         password: str | bytes, hash: str | bytes

@@ -417,6 +417,10 @@ margin-top: 32px;
     width: 14%;
 }
 
+.add-cursor {
+    cursor: pointer;
+}
+
 .section-2__table_body-item {
     border: 1px solid #DEE2E6;
     padding: 16px 0px 14px 20px;
@@ -425,7 +429,7 @@ margin-top: 32px;
 }
 
 .section-2__table_body-link {
-    color: #007BFF;
+    color: #000000;
 }
 
 .section-2__table_body-link:hover {

@@ -68,21 +68,8 @@ def get_reset_password_router(
             pass
 
         return None
-    
 
-    # @router.get(
-    #         "/edit_password/{token}",
-    #         name="reset:edit_password",
-    # )
-    # async def edit_password(
-    #     request: Request,
-    #     token: str,
-    # ):
-    #     return templates.TemplateResponse(request, "index1.html", context={"token": token})
-        
-
-
-    @router.get(
+    @router.post(
         "/reset-password",
         name="reset:reset_password",
         responses=RESET_PASSWORD_RESPONSES,

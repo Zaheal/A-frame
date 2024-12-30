@@ -480,6 +480,8 @@ body::-webkit-scrollbar {
     align-items: center;
     flex-direction: column;
     margin-top: 49px;
+    background-color: var(--main);
+    justify-content: center;
 }
 
 .online-booking {
