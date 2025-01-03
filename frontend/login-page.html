@@ -65,28 +65,29 @@
                 <input class="section-2__input-block_input _contact" type="email" name="username" placeholder="Почта" required>
                 <input class="section-2__input-block_input _password" type="password" name="password" placeholder="Пароль" required>
                 <button class="section-2__input-block_button" type="submit">Войти</button>
-                <div id="message"></div>
+                <div id="message" style="margin-top: 10px;"></div>
                 <a class="section-2__input-block_link" style="cursor: pointer;" href="{{ url_for('reset_password') }}">
                     Забыли пароль? 
                 </a>
                 <script>
                     const formElement = document.getElementById('formData');
-                    formElement.addEventListener('submit', async function(e) {
+                    formElement.addEventListener('submit', async (event) => {
                         event.preventDefault();
         
                         const formDates = new FormData(formElement);
-                        console.log(formDates)
                         try {
                             const response = await fetch(
                             "/auth/jwt/login", {
                                 method: "POST",
                                 body: formDates
                                 })
-                                .catch(err => new Error(err))
-                                if (response.ok) {
-                                    window.location.href = "/";
-                                } 
-                            } catch (error) {
+                                if (!response.ok) {
+                                    throw new Error("Пароль или почта введены не правильно.")
+                                } else {
+                                    window.location.href = "/"
+                                }
+                                
+                            } catch(error) {
                                 document.getElementById("message").textContent = error.message
                             }
                     });
@@ -96,7 +97,7 @@
                         <img class="section-2__socialmedia-block_img _logo-telegram" src="img/svg/logo-telegram.svg" alt="">
                     </a>
                 </div>
-                <a href="{{ url_for('registration') }}" class="section-2__input-block_link _registration">
+                <a href="{{ url_for('registration') }}" class="section-2__input-block_link _registration" style="margin-bottom: 10px;">
                     Зарегистрироваться
                 </a>
             </form>

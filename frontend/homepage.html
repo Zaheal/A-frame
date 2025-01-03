@@ -58,11 +58,11 @@
                     <a class="menu-container__link" href="#contacts">Контакты</a>
                     <a class="menu-container__link" href="#gallery">Галерея</a>
                     {% if user.is_authenticated %}
-                    <a class="header__nav_list-link" href="{{ url_for('profile') }}">
+                    <a class="menu-container__link" href="{{ url_for('profile') }}">
                         Профиль
                     </a>
                     {% else %}
-                    <a class="header__nav_list-link" href="{{ url_for('login') }}">
+                    <a class="menu-container__link" href="{{ url_for('login') }}">
                         Войти
                     </a>
                     {% endif %}
@@ -72,6 +72,10 @@
     </header>
     <main class="main">
         <section class="section-1" id="section1">
+            <video class="video-background" autoplay loop playsinline>
+                <source src="{{ url_for('static', path='/img/video/1/output.mp4') }}" type="video/mp4">
+                Ваш браузер не поддерживает видеоформат.
+            </video>
             <h1 class="section-1__title">
                 A-Frame
             </h1>
@@ -98,72 +102,104 @@
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/1/IMG_1.jpg') }}" alt="First picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
-                                Текст
+                                A-frame
                             </h1>
                             <h2 class="slider__item_box-text">
-                                Текст
+                                Уютный A-frame дом в стиле ретро, окруженный природой.
                             </h2>
                         </div>
                     </div>
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/1/IMG_2.jpg') }}" alt="Second picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
-                                Текст
+                                Беседка
                             </h1>
                             <h2 class="slider__item_box-text">
-                                Текст
+                                Очаровательная беседка на свежем воздухе.
                             </h2>
                         </div>
                     </div>
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/1/IMG_3.jpg') }}" alt="Third picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
-                                Текст
+                                Гостевая
                             </h1>
                             <h2 class="slider__item_box-text">
-                                Текст
+                                Просторная комната с комфортной мебелью.
                             </h2>
                         </div>
                     </div>
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/1/IMG_4.jpg') }}" alt="Fourth picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
-                                Текст
+                                Игры
                             </h1>
                             <h2 class="slider__item_box-text">
-                                Текст
+                                Уголок для отдыха с разнообразными настольными играми и консолью Sega.
                             </h2>
                         </div>
                     </div>
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/1/IMG_5.jpg') }}" alt="Fifth picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
-                                Текст
+                                Ванная
                             </h1>
                             <h2 class="slider__item_box-text">
-                                Текст
+                                Чистая и современная ванная с удобствами.
                             </h2>
                         </div>
                     </div>
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/1/IMG_6.jpg') }}" alt="Sixth picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
-                                Текст
+                                Кухня
                             </h1>
                             <h2 class="slider__item_box-text">
-                                Текст
+                                Стильная кухня с открытой планировкой и уютной обеденной зоной.
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="slider__item">
+                        <div class="slider__item_box">
+                            <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/1/IMG_8.jpg') }}" alt="Seventh picture in slider">
+                            </div>
+                            <h1 class="slider__item_box-title">
+                                Чан
+                            </h1>
+                            <h2 class="slider__item_box-text">
+                                За доп. плату вы можете насладиться банным чаном на открытом воздухе.
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="slider__item">
+                        <div class="slider__item_box">
+                            <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/1/IMG_7.jpg') }}" alt="Eighth picture in slider">
+                            </div>
+                            <h1 class="slider__item_box-title">
+                                Спальня
+                            </h1>
+                            <h2 class="slider__item_box-text">
+                                Спальня на втором этаже с проектором, идеальная для просмотра фильмов.
                             </h2>
                         </div>
                     </div>
@@ -172,53 +208,109 @@
             <div class="section-2__slider-touch_block">
                 <div class="section-2__slider-touch">
                     <div class="slider-touch__item">
-                        <div class="slider-touch__item_block"></div>
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/1/IMG_1.jpg') }}" alt="First picture in slider-mobile">
+                        </div>
                         <p class="slider-touch__item_title">
-                            Текст
+                            A-frame
                         </p>
-                        <p class="slider-touch__item_text">текст</p>
+                        <p class="slider-touch__item_text">
+                            Уютный A-frame дом в стиле ретро, окруженный природой.
+                        </p>
                     </div>
                     <div class="slider-touch__item">
-                        <div class="slider-touch__item_block"></div>
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/1/IMG_2.jpg') }}" alt="Second picture in slider-mobile">
+                        </div>
                         <p class="slider-touch__item_title">
-                            Текст
+                            Беседка
                         </p>
-                        <p class="slider-touch__item_text">текст</p>
+                        <p class="slider-touch__item_text">
+                            Очаровательная беседка на свежем воздухе.
+                        </p>
                     </div>
                     <div class="slider-touch__item">
-                        <div class="slider-touch__item_block"></div>
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/1/IMG_3.jpg') }}" alt="Third picture in slider-mobile">
+                        </div>
                         <p class="slider-touch__item_title">
-                            Текст
+                            Гостевая
                         </p>
-                        <p class="slider-touch__item_text">текст</p>
+                        <p class="slider-touch__item_text">
+                            Просторная комната с комфортной мебелью.
+                        </p>
                     </div>
                     <div class="slider-touch__item">
-                        <div class="slider-touch__item_block"></div>
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/1/IMG_4.jpg') }}" alt="Fourth picture in slider-mobile">
+                        </div>
                         <p class="slider-touch__item_title">
-                            Текст
+                            Игры
                         </p>
-                        <p class="slider-touch__item_text">текст</p>
+                        <p class="slider-touch__item_text">
+                            Уголок для отдыха с разнообразными настольными играми и консолью Sega.
+                        </p>
                     </div>
                     <div class="slider-touch__item">
-                        <div class="slider-touch__item_block"></div>
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/1/IMG_5.jpg') }}" alt="Fifth picture in slider-mobile">
+                        </div>
                         <p class="slider-touch__item_title">
-                            Текст
+                            Ванная
                         </p>
-                        <p class="slider-touch__item_text">текст</p>
+                        <p class="slider-touch__item_text">
+                            Чистая и современная ванная с удобствами.
+                        </p>
+                    </div>
+                    <div class="slider-touch__item">
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/1/IMG_6.jpg') }}" alt="Sixth picture in slider-mobile">
+                        </div>
+                        <p class="slider-touch__item_title">
+                            Кухня
+                        </p>
+                        <p class="slider-touch__item_text">
+                            Стильная кухня с открытой планировкой и уютной обеденной зоной.
+                        </p>
+                    </div>
+                    <div class="slider-touch__item">
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/1/IMG_8.jpg') }}" alt="Seventh picture in slider-mobile">
+                        </div>
+                        <p class="slider-touch__item_title">
+                            Чан
+                        </p>
+                        <p class="slider-touch__item_text">
+                            За доп. плату вы можете насладиться банным чаном на открытом воздухе.
+                        </p>
+                    </div>
+                    <div class="slider-touch__item">
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/1/IMG_7.jpg') }}" alt="Eighth picture in slider-mobile">
+                        </div>
+                        <p class="slider-touch__item_title">
+                            Спальня
+                        </p>
+                        <p class="slider-touch__item_text">
+                            Спальня на втором этаже с проектором, идеальная для просмотра фильмов.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
         <section class="section-3 _container-2 _offset">
+            <img class="section-3__block" src="{{ url_for('static', path='img/jpg/section-3__block1.jpg') }}" alt="First main photo">
             <h1 class="section-3__title">
                 О нас
             </h1>
             <h2 class="section-3__text">
-                Текст
+                Добро пожаловать в наш уголок уюта! Мы рады представить вам наши A-frame домики, идеальное место для отдыха и восстановления сил.
+                <br><br>
+                Мы предлагаем четыре уникальных A-frame домика, каждый из которых обладает своим характером и стилем.
+                <br><br>
+                !Внимание! На данный момент в нашем распоряжении находится только один домик, но мы уверены, что он станет идеальным местом для вашего отдыха.
             </h2>
-            <div class="section-3__block">
-
-            </div>
+            <img class="section-3__block" src="{{ url_for('static', path='img/jpg/section-3__block.jpg') }}" alt="Second main photo">
         </section>
         <section class="section-4 _container-2 _offset">
             <h1 class="section-4__title">
@@ -227,66 +319,66 @@
             <div class="section-4__text-box">
                 <div class="section-4__maintext-block">
                     <p class="section-4__maintext-block_text">
-                        Текст
+                        Как бронировать домики?
                     </p>
                     <button class="section-4__maintext-block_button" id="button1">
-                        <img class="section-4__button_img" src="img/svg/arrow__down.svg" alt="">
+                        <img class="section-4__button_img" src="{{ url_for('static', path='img/svg/arrow__down.svg') }}" alt="Arrow down">
                     </button>
                 </div>
                 <p class="section-4__hidden-text-1 _hidden-text">
-                    Текст
+                    Для бронирования домиков вы должы быть авторизированы, если у вас нет аккаунта можете зарегестрироваться.
                 </p>
             </div>
             <div class="section-4__text-box">
                 <div class="section-4__maintext-block">
                     <p class="section-4__maintext-block_text">
-                        Текст
+                        Зачем нужна регистрация?
                     </p>
                     <button class="section-4__maintext-block_button" id="button2">
-                        <img class="section-4__button_img" src="img/svg/arrow__down.svg" alt="">
+                        <img class="section-4__button_img" src="{{ url_for('static', path='img/svg/arrow__down.svg') }}" alt="Arrow down">
                     </button>
                 </div>
                 <p class="section-4__hidden-text-2 _hidden-text">
-                    Текст
+                    С помощью вашего личного профиля вы можете отменять бронь и смотреть время проведенное вместе с A-Frame.Kam &#128522;
                 </p>
             </div>
             <div class="section-4__text-box">
                 <div class="section-4__maintext-block">
                     <p class="section-4__maintext-block_text">
-                        Текст
+                        Как оплачивать?
                     </p>
                     <button class="section-4__maintext-block_button" id="button3">
-                        <img class="section-4__button_img" src="img/svg/arrow__down.svg" alt="">
+                        <img class="section-4__button_img" src="{{ url_for('static', path='img/svg/arrow__down.svg') }}" alt="Arrow down">
                     </button>
                 </div>
                 <p class="section-4__hidden-text-3 _hidden-text">
-                    Текст
+                    После бронирования с вами в ближайшее время свяжутся и обо всём расскажут, поэтому оставляйте свои актуальные контакты.
                 </p>
             </div>
             <div class="section-4__text-box" id="button-1">
                 <div class="section-4__maintext-block">
                     <p class="section-4__maintext-block_text">
-                        Текст
+                        Какие условия отмены бронирования?
                     </p>
                     <button class="section-4__maintext-block_button" id="button4">
-                        <img class="section-4__button_img" src="img/svg/arrow__down.svg" alt="">
+                        <img class="section-4__button_img" src="{{ url_for('static', path='img/svg/arrow__down.svg') }}" alt="Arrow down">
                     </button>
                 </div>
                 <p class="section-4__hidden-text-4 _hidden-text">
-                    Текст
+                    Задаток не возвращается менее 7 дней до даты заселения.
                 </p>
             </div>
             <div class="section-4__text-box">
                 <div class="section-4__maintext-block">
                     <p class="section-4__maintext-block_text">
-                        Текст
+                        Как с нами связаться?
                     </p>
                     <button class="section-4__maintext-block_button" id="button5">
-                        <img class="section-4__button_img" src="img/svg/arrow__down.svg" alt="">
+                        <img class="section-4__button_img" src="{{ url_for('static', path='img/svg/arrow__down.svg') }}" alt="Arrow down">
                     </button>
                 </div>
                 <p class="section-4__hidden-text-5 _hidden-text">
-                    Текст
+                    Вы можете связаться с нами через наши соц.сети, написать на почту или позвонить по номеру, указанному внизу.
                 </p>
             </div>
         </section>
@@ -296,24 +388,32 @@
             </h1>
             <div class="section-5__photo-block">
                 <a href="{{ url_for( 'house_page', house_id=1 ) }}" class="section-5__photo-block_link">
-                    <img src="img/jpg/section-5_img-1.jpg" alt="Ретро" class="section-5__photo-block_img">
+                    <img src="img/jpg/section-5_img-1.jpg" alt="First house" class="section-5__photo-block_img">
                 </a>
                 <a href="#" class="section-5__photo-block_link" title="Скоро">
-                    <img src="img/jpg/section-5_img-2.jpg" alt="Инстаграм" class="section-5__photo-block_img">
+                    <img src="img/jpg/section-5_img-2.jpg" alt="Second house" class="section-5__photo-block_img">
                 </a>
                 <a href="#" class="section-5__photo-block_link" title="Скоро">
-                    <img src="img/jpg/section-5_img-3.jpg" alt="Pass" class="section-5__photo-block_img">
+                    <img src="img/jpg/section-5_img-3.jpg" alt="Fourth house" class="section-5__photo-block_img">
                 </a>
                 <a href="#" class="section-5__photo-block_link" title="Скоро">
-                    <img src="img/jpg/section-5_img-4.jpg" alt="Море" class="section-5__photo-block_img">
+                    <img src="img/jpg/section-5_img-4.jpg" alt="Third house" class="section-5__photo-block_img">
                 </a>
             </div>
             <p class="section-5__text">
                 Следите за нами
             </p>
-            <a href="https://www.instagram.com/aframe_kam" class="section-5__socialmedia_link">
-                <img src="img/svg/logo-instagram.svg" alt="">
-            </a>
+            <div class="section-5__socialmedia-block">                     
+                <a target="_blank" href="https://www.instagram.com/aframe_kam">
+                    <h1 style="font-size: large;">Instagram<sup>*</sup></h1>
+                </a>
+                <a target="_blank" href="https://vk.com/aframe_kam">
+                    <img src="{{ url_for( 'static', path='img/svg/logo-vk.svg') }}" alt="vk">
+                </a>
+                <a target="_blank" href="https://t.me/aframe_kam">
+                    <img src="{{ url_for( 'static', path='img/svg/logo-telegram.svg') }}" alt="telegram">
+                </a>
+            </div>
         </section>
     </main>
     <footer class="footer">
@@ -329,7 +429,10 @@
                     Почта: a-frame.kam@ya.ru
                 </li>
                 <li class="footer-block__list_item">
-                    Адрес: Камышин, СНТ "Березки 2", дом 12
+                    Адрес: Камышин, СНТ "Березки 2", дом 11
+                </li>
+                <li class="footer-block__list_item">
+                    Рекомендуем ехать с Камышина, через Магнит Экстра
                 </li>
             </ul>
         <div class="yandex-map__block">
@@ -338,7 +441,7 @@
         </div>
         <div class="footer__policy">
             <p class="footer__policy_text">
-                © Все права защищены
+                © Все права защищены.* Социальная сеть Instagram запрещена на территории РФ.
             </p>
             <a href="#section1" class="footer__policy_link"></a>
         </div>

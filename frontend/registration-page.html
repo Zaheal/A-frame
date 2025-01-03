@@ -63,14 +63,48 @@
             </h1>
         </section>
         <section class="section-2 _container">
-            <form class="section-2__input-block" action="{{ url_for('bridge_registration') }}" method="post">
+            <form class="section-2__input-block" id="formData">
                 <input class="section-2__input-block_input _contact" type="text" name="name" placeholder="Имя" required>
                 <input class="section-2__input-block_input _contact" type="email" name="email" placeholder="Почта" required>
                 <input class="section-2__input-block_input _name" type="tel" name="number" placeholder="Номер" required>
                 <input class="section-2__input-block_input _password1" type="password" name="password" placeholder="Пароль" required>
                 <button class="section-2__input-block_button">Зарегистрироваться</button>
+                <div id="message" style="margin-top: 10px;"></div>
                 <a href="{{ url_for('login') }}" class="section-2__input-block_link _singIn">Войти</a>
             </form>
+            <script>
+                const formElement = document.getElementById('formData');
+                formElement.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+    
+                    const formData = new FormData(formElement);
+                    const data = Object.fromEntries(formData.entries())
+
+                    try {
+                        const response = await fetch(
+                        "/auth/register", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(data)
+                            })
+                            if (!response.ok) {
+                                const err = await response.json()
+                                if (err.detail === "REGISTER_USER_ALREADY_EXISTS") {
+                                    throw new Error("Пользователь с такой почтой уже существует.")
+                                } else {
+                                    throw new Error("Пароль должен содержать больше 8 символов.")
+                                }
+                            } else {
+                                window.location.href = "/login"
+                            }
+                            
+                        } catch(error) {
+                            document.getElementById("message").textContent = error.message
+                        }
+                });
+            </script>
         </section>
     </main>
     <footer class="footer">

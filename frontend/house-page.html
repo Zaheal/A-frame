@@ -58,13 +58,21 @@
                 <div class="menu-container">
                     <a class="menu-container__link" href="{{ url_for( 'homepage' ) }}#contacts">Контакты</a>
                     <a class="menu-container__link" href="{{ url_for( 'homepage' ) }}#gallery">Галерея</a>
+                    {% if user.is_authenticated %}
+                    <a class="menu-container__link" href="{{ url_for( 'profile' ) }}">Профиль</a>
+                    {% else %}
                     <a class="menu-container__link" href="{{ url_for( 'login' ) }}">Войти</a>
+                    {% endif %}
                 </div>  
             </div>
         </div>
     </header>
     <main class="main">
         <section class="section-1" id="section1">
+            <video class="video-background" autoplay loop playsinline>
+                <source src="{{ url_for('static', path='/img/video/' ~ data.id ~ '/output.mp4') }}" type="video/mp4">
+                Ваш браузер не поддерживает видеоформат.
+            </video>
             <h1 class="section-1__title">
                 {{ data.style }}
             </h1>
@@ -77,7 +85,7 @@
         <section class="section-2">
             <div class="section-2__text-block _container">
                 <h1 class="section-2__text-block_title">
-                    Текст
+                    Инфоблок
                 </h1>
                 <h2 class="section-2__text-block_text">
                     {{ data.description }} <br>
@@ -85,7 +93,7 @@
                     2. Размер: {{ data.size }} м<sup>2</sup> <br>
                     3. Расположение на участке: {{ data.location }} <br>
                     4. Дополнения: {{ data.add }} <br>
-                    5. Цена одних суток: {{ data.cost }}
+                    5. Цена одних суток: {{ data.cost }}&#8381;
                 </h2>
             </div>
             <div class="section-2__slider-infinity_block">
@@ -93,72 +101,104 @@
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_1.jpg') }}" alt="First picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
-                                Текст
+                                A-frame
                             </h1>
                             <h2 class="slider__item_box-text">
-                                Текст
+                                Уютный A-frame дом в стиле ретро, окруженный природой.
                             </h2>
                         </div>
                     </div>
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_2.jpg') }}" alt="Second picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
-                                Текст
+                                Беседка
                             </h1>
                             <h2 class="slider__item_box-text">
-                                Текст
+                                Очаровательная беседка на свежем воздухе.
                             </h2>
                         </div>
                     </div>
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_3.jpg') }}" alt="Third picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
-                                Текст
+                                Гостевая
                             </h1>
                             <h2 class="slider__item_box-text">
-                                Текст
+                                Просторная комната с комфортной мебелью.
                             </h2>
                         </div>
                     </div>
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_4.jpg') }}" alt="Fourth picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
-                                Текст
+                                Игры
                             </h1>
                             <h2 class="slider__item_box-text">
-                                Текст
+                                Уголок для отдыха с разнообразными настольными играми и консолью Sega.
                             </h2>
                         </div>
                     </div>
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_5.jpg') }}" alt="Fifth picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
-                                Текст
+                                Ванная
                             </h1>
                             <h2 class="slider__item_box-text">
-                                Текст
+                                Чистая и современная ванная с удобствами.
                             </h2>
                         </div>
                     </div>
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_6.jpg') }}" alt="Sixth picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
-                                Текст
+                                Кухня
                             </h1>
                             <h2 class="slider__item_box-text">
-                                Текст
+                                Стильная кухня с открытой планировкой и уютной обеденной зоной.
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="slider__item">
+                        <div class="slider__item_box">
+                            <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_8.jpg') }}" alt="Seventh picture in slider">
+                            </div>
+                            <h1 class="slider__item_box-title">
+                                Чан
+                            </h1>
+                            <h2 class="slider__item_box-text">
+                                За доп. плату вы можете насладиться банным чаном на открытом воздухе.
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="slider__item">
+                        <div class="slider__item_box">
+                            <div class="slider__item_box-block">
+                                <img class="slider__item_box-block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_7.jpg') }}" alt="Eighth picture in slider">
+                            </div>
+                            <h1 class="slider__item_box-title">
+                                Спальня
+                            </h1>
+                            <h2 class="slider__item_box-text">
+                                Спальня на втором этаже с проектором, идеальная для просмотра фильмов.
                             </h2>
                         </div>
                     </div>
@@ -167,39 +207,92 @@
             <div class="section-2__slider-touch_block">
                 <div class="section-2__slider-touch">
                     <div class="slider-touch__item">
-                        <div class="slider-touch__item_block"></div>
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_1.jpg') }}" alt="First picture in slider-mobile">
+                        </div>
                         <p class="slider-touch__item_title">
-                            Текст
+                            A-frame
                         </p>
-                        <p class="slider-touch__item_text">текст</p>
+                        <p class="slider-touch__item_text">
+                            Уютный A-frame дом в стиле ретро, окруженный природой.
+                        </p>
                     </div>
                     <div class="slider-touch__item">
-                        <div class="slider-touch__item_block"></div>
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_2.jpg') }}" alt="Second picture in slider-mobile">
+                        </div>
                         <p class="slider-touch__item_title">
-                            Текст
+                            Беседка
                         </p>
-                        <p class="slider-touch__item_text">текст</p>
+                        <p class="slider-touch__item_text">
+                            Очаровательная беседка на свежем воздухе.
+                        </p>
                     </div>
                     <div class="slider-touch__item">
-                        <div class="slider-touch__item_block"></div>
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_3.jpg') }}" alt="Third picture in slider-mobile">
+                        </div>
                         <p class="slider-touch__item_title">
-                            Текст
+                            Гостевая
                         </p>
-                        <p class="slider-touch__item_text">текст</p>
+                        <p class="slider-touch__item_text">
+                            Просторная комната с комфортной мебелью.
+                        </p>
                     </div>
                     <div class="slider-touch__item">
-                        <div class="slider-touch__item_block"></div>
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_4.jpg') }}" alt="Fourth picture in slider-mobile">
+                        </div>
                         <p class="slider-touch__item_title">
-                            Текст
+                            Игры
                         </p>
-                        <p class="slider-touch__item_text">текст</p>
+                        <p class="slider-touch__item_text">
+                            Уголок для отдыха с разнообразными настольными играми и консолью Sega.
+                        </p>
                     </div>
                     <div class="slider-touch__item">
-                        <div class="slider-touch__item_block"></div>
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_5.jpg') }}" alt="Fifth picture in slider-mobile">
+                        </div>
                         <p class="slider-touch__item_title">
-                            Текст
+                            Ванная
                         </p>
-                        <p class="slider-touch__item_text">текст</p>
+                        <p class="slider-touch__item_text">
+                            Чистая и современная ванная с удобствами.
+                        </p>
+                    </div>
+                    <div class="slider-touch__item">
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_6.jpg') }}" alt="Sixth picture in slider-mobile">
+                        </div>
+                        <p class="slider-touch__item_title">
+                            Кухня
+                        </p>
+                        <p class="slider-touch__item_text">
+                            Стильная кухня с открытой планировкой и уютной обеденной зоной.
+                        </p>
+                    </div>
+                    <div class="slider-touch__item">
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_8.jpg') }}" alt="Seventh picture in slider-mobile">
+                        </div>
+                        <p class="slider-touch__item_title">
+                            Чан
+                        </p>
+                        <p class="slider-touch__item_text">
+                            За доп. плату вы можете насладиться банным чаном на открытом воздухе.
+                        </p>
+                    </div>
+                    <div class="slider-touch__item">
+                        <div class="slider-touch__item_block">
+                            <img class="slider-touch__item_block" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_7.jpg') }}" alt="Eighth picture in slider-mobile">
+                        </div>
+                        <p class="slider-touch__item_title">
+                            Спальня
+                        </p>
+                        <p class="slider-touch__item_text">
+                            Спальня на втором этаже с проектором, идеальная для просмотра фильмов.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -208,128 +301,6 @@
             <p class="section-3__text">
                 Выберите даты вашего пребывания (выселение в 12:00, заселение в 14:00)
             </p>
-<style>
-.calendar-container {
-    background: #fff;
-    width: 450px;
-    border-radius: 10px;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-}
-
-.calendar-container header {
-    display: flex;
-    align-items: center;
-    padding: 25px 30px 10px;
-    justify-content: space-between;
-}
-
-header .calendar-navigation {
-    display: flex;
-}
-
-header .calendar-navigation span {
-    height: 38px;
-    width: 38px;
-    margin: 0 1px;
-    cursor: pointer;
-    text-align: center;
-    line-height: 38px;
-    border-radius: 50%;
-    user-select: none;
-    color: #aeabab;
-    font-size: 1.9rem;
-}
-
-.calendar-navigation span:last-child {
-    margin-right: -10px;
-}
-
-header .calendar-navigation span:hover {
-    background: #f2f2f2;
-}
-
-header .calendar-current-date {
-    font-weight: 500;
-    font-size: 1.45rem;
-}
-
-.calendar-body {
-    padding: 20px;
-}
-
-.calendar-body ul {
-    list-style: none;
-    flex-wrap: wrap;
-    display: flex;
-    text-align: center;
-}
-
-.calendar-body .calendar-dates {
-    margin-bottom: 20px;
-}
-
-.calendar-body li {
-    width: calc(100% / 7);
-    font-size: 1.07rem;
-    color: #414141;
-}
-
-.calendar-body .calendar-weekdays li {
-    cursor: default;
-    font-weight: 500;
-}
-
-.calendar-body .calendar-dates li {
-    margin-top: 30px;
-    position: relative;
-    z-index: 1;
-    cursor: pointer;
-}
-
-.calendar-dates li.inactive {
-    color: #aaa;
-}
-
-.calendar-dates li.active {
-    color: #fff;
-}
-
-.calendar-dates li::before {
-    position: absolute;
-    content: "";
-    z-index: -1;
-    top: 50%;
-    left: 50%;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.calendar-dates li.active::before {
-    background: #000000;
-}
-
-.calendar-dates li.booked::before {
-    background: #964b00;
-}
-
-.calendar-dates li.booked_start::before {
-    background: linear-gradient(to left, #964b00 50%, transparent 50%);
-}
-
-.calendar-dates li.booked_end::before {
-    background: linear-gradient(to right, #964b00 50%, transparent 50%);
-}
-
-.calendar-dates li:not(.active):hover::before {
-    background: #e4e1e1;
-}
-.calendar-dates li.selected::before {
-    background-color: #964b00;
-    color: white;
-}
-</style>
 <br>
                 <div class="calendar-container">
                     <header class="calendar-header">
@@ -358,10 +329,13 @@ header .calendar-current-date {
                         <ul class="calendar-dates"></ul>
                     </div>
                 </div>
-
+                {% if user.is_authenticated %}
                 <button class="section-3__block_btn" id="calendar-button">
                     Зарезервировать
                 </button>
+                {% else %}
+                <button class="section-3__block_btn"><a style="color: black;" href="{{ url_for('login') }}">Войдите в систему</a></button>
+                {% endif %}
                 <div id="answer" style="margin-top: 10px;"></div>
             <script>
                 const costDay = "{{ data.cost }}"

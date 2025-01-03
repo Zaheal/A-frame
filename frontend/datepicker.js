@@ -90,6 +90,12 @@ const manipulate = () => {
                 dayElement.classList.add('booked');
                 dayElement.onclick = null; // Запретить клик на забронированные даты
             } else if (dateString === dates[0]) {
+                if (dayElement.classList.contains('booked_end')) {
+                    dayElement.classList.remove('booked_end')
+                    dayElement.classList.add('booked');
+                    dayElement.onclick = null; // Запретить клик на забронированные даты
+                    return;
+                }
                 dayElement.classList.add("booked_start")
                 dayElement.onclick = () => toggleDateSelection(dayElement)
             } else if (dateString === dates[1]) {
@@ -182,18 +188,24 @@ function highlightRange(start, end) {
     const startDate = new Date(start)
     const endDate = new Date(end)
 
-    days.forEach(day => {
+    for (const day of days) {
         const item = day.dataset.date;
         const itemDate = new Date(item)
         if (( day.classList.contains("booked_start") && item === start )
             || ( day.classList.contains("booked_end") && item === end )
             || ( (day.classList.contains("booked") || day.classList.contains("booked_start") || day.classList.contains("booked_end")) && (itemDate > startDate && itemDate < endDate) )) {
-            resetSelection()
-            return;
+            resetSelection();
+            break
         } else if (item >= start && item <= end) {
             day.classList.add('selected');
         }
-    });
+    };
+
+    const message = document.getElementById("answer")
+
+    const diffInTime = endDate - startDate
+    const diffInDays = diffInTime / (1000 * 3600 * 24);
+    message.textContent = `Стоимость: ${diffInDays * costDay}\u20BD`
 }
 
 // Функция для сброса выбора
@@ -203,13 +215,9 @@ function resetSelection() {
     
     const days = document.querySelectorAll('.calendar-dates li');
     days.forEach(day => day.classList.remove('selected'));
+    const message = document.getElementById("answer")
+    message.textContent = ""
 }
-
-const startDate = new Date(selectedStartDate)
-const endDate = new Date(selectedEndDate)
-
-const diffInTime = endDate - startDate
-const diffInDays = diffInTime / (1000 * 3600 * 24);
 
 bookButton.addEventListener('click', async function(e) {
     const startDate = new Date(selectedStartDate)
@@ -223,6 +231,7 @@ bookButton.addEventListener('click', async function(e) {
         full_price: diffInDays * costDay,
         house_id: parseInt(window.location.pathname.split("/")[2]),
     }
+    const message = document.getElementById("answer")
 
     if (selectedStartDate && selectedEndDate) {
         await fetch('/api/create/reservation', {
@@ -236,17 +245,14 @@ bookButton.addEventListener('click', async function(e) {
             if (!response.ok) {
                 throw new Error("Ошибка сервера, не удалось зарезервировать домик!")
             }
-            const message = document.getElementById("answer")
-            message.textContent = "Вы успешно зарезервировали домик! В скором времени с вами свяжутся."
+            message.textContent = "Вы успешно зарезервировали домик! В скором времени с вами свяжутся. Можете отменить бронь у себя в профиле."
         })
         .catch(error => {
             console.error("Ошибка:", error)
-            const message = document.getElementById("answer")
             message.textContent = "Ошибка, попробуйте позже или позвоните по номеру на главной странице."
             message.style.color = "red"
         })
     } else {
-        const message = document.getElementById("answer")
         message.textContent = 'Пожалуйста, выберите даты для бронирования.'
     }
 });

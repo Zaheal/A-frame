@@ -7,13 +7,7 @@ from fastapi_users.openapi import OpenAPIResponseType
 from fastapi_users.router.common import ErrorCode, ErrorModel
 
 from fastapi import Form
-from fastapi.templating import Jinja2Templates
 
-from src.config.project_config import get_settings
-
-settings = get_settings()
-
-templates = Jinja2Templates(directory=f"{settings.TEMPLATE_URL}template")
 
 RESET_PASSWORD_RESPONSES: OpenAPIResponseType = {
     status.HTTP_400_BAD_REQUEST: {
@@ -76,7 +70,7 @@ def get_reset_password_router(
     )
     async def reset_password(
         request: Request,
-        token: str,
+        token: str = Form(),
         password: str = Form(),
         user_manager: BaseUserManager[models.UP, models.ID] = Depends(get_user_manager),
     ):

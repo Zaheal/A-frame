@@ -6,10 +6,6 @@ from fastapi_users import exceptions, models, schemas
 from fastapi_users.manager import BaseUserManager, UserManagerDependency
 from fastapi_users.router.common import ErrorCode, ErrorModel
 
-from src.logger import get_logger
-
-logger = get_logger(__name__)
-
 
 def get_register_router(
     get_user_manager: UserManagerDependency[models.UP, models.ID],
@@ -57,7 +53,6 @@ def get_register_router(
         user_create: user_create_schema,  # type: ignore
         user_manager: BaseUserManager[models.UP, models.ID] = Depends(get_user_manager),
     ):
-        logger.info(user_create)
         try:
             created_user = await user_manager.create(
                 user_create, safe=True, request=request

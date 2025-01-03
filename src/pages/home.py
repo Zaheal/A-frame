@@ -27,14 +27,6 @@ def homepage(
     return templates.TemplateResponse(request, "/homepage.html", context={'user': user})
 
 
-# Функция для генерации всех дат в диапазоне
-def get_dates_in_range(start_date, end_date):
-    current_date = datetime.today().date()
-    if end_date >= current_date:
-        delta = end_date - start_date
-        return [start_date.strftime('%Y-%m-%d') for i in range(delta.days)]
-
-
 @router.get("/house/{house_id}", response_class=HTMLResponse)
 async def house_page(
         request: Request,
@@ -50,7 +42,10 @@ async def house_page(
 
     booked_dates = []
     for reserv in data.busy_times:
-        booked_dates.append([str(reserv.start)[:10], str(reserv.end)[:10]])
+        if reserv.end.date() < datetime.now().date():
+            booked_dates.append([str(reserv.start)[:10], str(reserv.end)[:10]])
 
+    if not booked_dates:
+        booked_dates.append(["2023-01-01", "2023-01-02"])
     
     return templates.TemplateResponse(request, "/house-page.html", context={"data": data, "booked_dates": booked_dates, "user": user})

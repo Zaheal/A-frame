@@ -40,7 +40,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         password: str,
         email: str,
     ) -> None:
-        await validate_password(password, email)
+        return await validate_password(password, email)
 
 
 async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):

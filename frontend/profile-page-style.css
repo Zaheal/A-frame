@@ -199,6 +199,7 @@ body::-webkit-scrollbar {
 /* ---MAIN----------------------------------------- */
 
 .main {
+    min-height: 100%;
 }
 
 /* ---SECTION-1---------------------------------------- */
@@ -363,7 +364,6 @@ margin-top: 32px;
 .section-2__table-block {
     max-width: 100%;
     width: 100%;
-    overflow-x: auto;
 }
 
 .section-2__table {
