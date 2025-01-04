@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
+from fastapi_cache.decorator import cache
 
 from src.schemas.auth_schemas import UserCreate, UserRead
 from src.services.user_service import UserService
@@ -22,6 +23,7 @@ async def create_user(uow: UOWDep, user: UserCreate):
 
 
 @router.get("/get/user/tg/{tg_id}")
+@cache(expire=60)
 async def get_user_by_tg(uow: UOWDep, tg_id: int):
     try:
         result = await UserService().get_user(uow, tg_id=tg_id)
@@ -33,6 +35,7 @@ async def get_user_by_tg(uow: UOWDep, tg_id: int):
     
 
 @router.get("/get/user/email/{email}")
+@cache(expire=60)
 async def get_user_by_email(uow: UOWDep, email: str):
     try:
         result = await UserService().get_user(uow, email=email)
@@ -44,6 +47,7 @@ async def get_user_by_email(uow: UOWDep, email: str):
 
 
 @router.get("/users/", response_model=list[UserRead])
+@cache(expire=60)
 async def list_users(uow: UOWDep):
     try:
         result = await UserService().get_users(uow)
@@ -65,7 +69,7 @@ async def update_user(uow: UOWDep, user_id: str, user: dict):
         return HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
-@router.delete("/delete/user/{user_id}", status_code=HTTP_204_NO_CONTENT)
+@router.post("/delete/user/{user_id}", status_code=HTTP_204_NO_CONTENT)
 async def delete_user(uow: UOWDep, user_id: str):
     try:
         result = await UserService().remove_user(uow, user_id)

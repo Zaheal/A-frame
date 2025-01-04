@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
+from fastapi_cache.decorator import cache
 
 from src.schemas.base_schemas import SReservationAdd, SReservationEdit
 from src.services.reservation_service import ReservationService
@@ -23,6 +24,7 @@ async def create_reservation(uow: UOWDep, reservation: SReservationAdd):
 
 
 @router.get("/reservations")
+@cache(expire=60)
 async def list_reservations(uow: UOWDep):
     try:
         result = await ReservationService().get_reservations(uow)
@@ -33,7 +35,7 @@ async def list_reservations(uow: UOWDep):
         return HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
-@router.put("/reservation/{reservation_id}", dependencies=[Depends(current_superuser)])
+@router.put("/update/reservation/{reservation_id}")
 async def update_reservation(uow: UOWDep, reservation_id: int, reservation: SReservationEdit):
     try:
         result = await ReservationService().edit_reservation(uow, reservation, reservation_id)
@@ -44,7 +46,7 @@ async def update_reservation(uow: UOWDep, reservation_id: int, reservation: SRes
         return HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
-@router.delete("/reservation/{reservation_id}", status_code=HTTP_204_NO_CONTENT, dependencies=[Depends(current_superuser)])
+@router.post("/delete/reservation/{reservation_id}", status_code=HTTP_204_NO_CONTENT)
 async def delete_reservation(uow: UOWDep, reservation_id: int):
     try:
         result = await ReservationService().remove_reservation(uow, reservation_id)

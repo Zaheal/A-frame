@@ -25,8 +25,8 @@ function sortTable(n) {
             }
             break;
           case 1: // Дата аренды (ближайшая/последняя)
-            let dateX = new Date(x.innerHTML.split('-')[0].trim()); // Обработка дат
-            let dateY = new Date(y.innerHTML.split('-')[0].trim());
+            let dateX = new Date(x.innerHTML.split(' - ')[0].trim()); // Обработка дат
+            let dateY = new Date(y.innerHTML.split(' - ')[0].trim());
             if (dir == "asc") {
               if (dateX > dateY) {
                 shouldSwitch = true;

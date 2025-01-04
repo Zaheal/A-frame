@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST
+from fastapi_cache.decorator import cache
 
 from src.services.house_service import HouseService
 from src.utils.dependencies import UOWDep
@@ -11,6 +12,7 @@ logger = get_logger(__name__)
 
 
 @router.get("/house/{house_id}", response_model=SHouseRead)
+@cache(expire=60)
 async def get_selected_house(
         uow: UOWDep,
         house_id: int

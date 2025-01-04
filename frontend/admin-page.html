@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for( 'static', path='/profile-page-style.css' ) }}">
+    <link rel="stylesheet" href="{{ url_for( 'static', path='/admin-page-style.css' ) }}">
     <link id="favicon" rel="icon" type="image/x-icon" href="/img/svg/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -74,10 +74,10 @@
         <section class="section-1">
             <div class="section-1__text-block _container">
                 <h1 class="section-1__text-block_title">
-                    Профиль
+                    Админка
                 </h1>
                 <h2 class="section-1__text-block_text">
-                    Это место, где Вы можете уточнить информацию о себе и своих арендованных домиках.
+                    Разделяй и властвуй.
                 </h2>
                 <form action="{{ url_for( 'homepage' ) }}" class="section-1__text-block_form">
                     <button class="section-1__text-block_form-btn">
@@ -117,66 +117,28 @@
                             })
                         }
                     </script>
-                    {% if user_data['is_verified'] == False %}
-                    <button onclick="verifyEmail();" class="section-2__info-block_button">
-                        Подтвердить почту 
-                    </button>
-                    {% endif %}
                 </div>
                 <div class="section-2__info-block_statistics">
                     <p class="section-2__info-block_statistics-title" id="infoBlockItem">
                         Ваша статистика
                     </p>
                     <ul class="section-2__info-block_statistics-list" id="infoBlockItem">
-                        <li class="section-2__info-block_list-item">
-                            <span style="font-weight: 700; font-size: 16px;">На платформе:</span> {{ user_data['created_at'] }}
+                        <li class="section-2__info-block_list-item" style="display: flex;">
+                            <span style="font-weight: 700; font-size: 16px; margin-right: 6px;">На платформе:</span> <p id="counter-people" style="margin-right: 6px;"></p> людей
                         </li>
-                        <li class="section-2__info-block_list-item">
-                            <span style="font-weight: 700; font-size: 16px;">Арендовано домов:</span> {{ '0' if reservations is none else reservations|length }}
+                        <li class="section-2__info-block_list-item" style="display: flex;">
+                            <span style="font-weight: 700; font-size: 16px; margin-right: 6px;">Арендовано домов:</span> <p id="counter-reservations" style="margin-right: 6px;"></p>
                         </li>
                     </ul>
                 </div>
             </div>
             <div class="section-2__table-block">
-                <p style="margin-top: 10px;">При отмене брони, задаток не возвращается менее 7 дней до даты заселения.</p>
-                <table class="section-2__table" id="table">
-                    <thead class="section-2__table_thead">
-                        <th class="section-2__table_thead-item _house-name_column" data-type="string" onclick="sortTable(0)">
-                            Название дома
-                        </th>
-                        <th class="section-2__table_thead-item _rental-date_column" data-type="string" onclick="sortTable(1)">
-                            Дата аренды
-                        </th>
-                        <th class="section-2__table_thead-item _price_column" data-type="number" onclick="sortTable(2)">
-                            Цена
-                        </th>
-                        <th class="section-2" data-type="string">
-                            Отменить
-                        </th>
-                    </thead>
-                    <tbody class="section-2__table_body">
-                        {% for reserv in reservations %}
-                        <tr class="section-2__table_body-row">
-                            <td class="section-2__table_body-item">
-                                <a href="{{ url_for('house_page', house_id=reserv.house_id ) }}" class="section-2__table_body-link">
-                                    {{ reserv.house.style }}
-                                </a>
-                            </td>
-                            <td class="section-2__table_body-item">
-                                {{ reserv.start }} - {{ reserv.end }}
-                            </td>
-                            <td class="section-2__table_body-item">
-                                {{ reserv.full_price }}
-                            </td>
-                            <td class="section-2__table_body-item">
-                                <form action="/api/delete/reservation/{{ reserv.id }}" method="post" onsubmit="window.location.reload()">
-                                    <button type="submit"><img style="cursor: pointer;" src="{{ url_for('static', path='img/jpeg/icons8-trash.gif') }}"></button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                <button id="show-users" class="section-2__info-block_button">Пользователи</button> 
+                <button id="show-reservations" class="section-2__info-block_button">Бронь</button>
+                <table class="section-2__table" id="table"></table>
+                <script>
+                    const pathTrash = "{{ url_for('static', path='img/jpeg/icons8-trash.gif') }}"
+                </script>
             </div>
         </section>
     </main>
@@ -189,5 +151,6 @@
     </footer>
     <script src="{{ url_for( 'static', path='/menu.js' ) }}"></script>
     <script src="{{ url_for( 'static', path='/table-sort.js' ) }}"></script>
+    <script src="{{ url_for( 'static', path='/loadtable.js' ) }}"></script>
 </body>
 </html>

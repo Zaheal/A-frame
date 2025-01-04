@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
+from fastapi_cache.decorator import cache
 
 from src.schemas.base_schemas import SReservationRead, SReservationAdd
 from src.services.reservation_service import ReservationService
@@ -19,7 +20,6 @@ async def get_house_reservations(uow: UOWDep, house_id: int) -> list[SReservatio
     """
     Возвращает список дат, когда домик забронирован
 
-    TODO избавиться от излишних запросов
     :param uow:
     :param house_id:
     :return:
@@ -34,6 +34,7 @@ async def get_house_reservations(uow: UOWDep, house_id: int) -> list[SReservatio
 
 
 @router.get("/my/reservations")
+@cache(expire=60)
 async def get_user_reservations(uow: UOWDep, user: User = Depends(current_active_user)) -> list[SReservationRead] | None:
     """
     Возвращает список броней пользователя

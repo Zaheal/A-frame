@@ -42,7 +42,7 @@ async def house_page(
 
     booked_dates = []
     for reserv in data.busy_times:
-        if reserv.end.date() < datetime.now().date():
+        if reserv.end > datetime.now().date():
             booked_dates.append([str(reserv.start)[:10], str(reserv.end)[:10]])
 
     if not booked_dates:

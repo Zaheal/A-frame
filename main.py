@@ -4,11 +4,15 @@ import uvicorn
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
 from starlette.status import HTTP_400_BAD_REQUEST
 from aiogram.types import Update
+from redis import asyncio as aioredis
 
 from src.config.project_config import get_settings
 from src.config.bot_config import get_config_bot
+from src.config.redis_config import get_redis_settings
 from src.routes import get_apps_router
 from src.logger import get_logger
 
@@ -18,23 +22,27 @@ from tg_bot.handlers import router
 
 logger = get_logger(__name__)
 bot_settings = get_config_bot()
+redis_settings = get_redis_settings()
 
-# @asynccontextmanager
-# async def lifespan(app: FastAPI):
-#     logger.info("Application startup")
-#     dp.include_router(router)
-#     await start_bot()
-#     webhook_url = bot_settings.get_webhook_url()
-#     await bot.set_webhook(url=webhook_url,
-#                           allowed_updates=dp.resolve_used_update_types(),
-#                           drop_pending_updates=True
-#                           )
-#     logger.info(f"Webhook set to {webhook_url}")
-#     yield
-#     logger.info("Aplication shutdown")
-#     await bot.delete_webhook()
-#     await stop_bot()
-#     logger.info("Webhook deleted")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # logger.info("Application startup")
+    # dp.include_router(router)
+    # await start_bot()
+    # webhook_url = bot_settings.get_webhook_url()
+    # await bot.set_webhook(url=webhook_url,
+    #                       allowed_updates=dp.resolve_used_update_types(),
+    #                       drop_pending_updates=True
+    #                       )
+    # logger.info(f"Webhook set to {webhook_url}")
+    redis = aioredis.from_url(redis_settings.redis_url)
+    logger.info(redis)
+    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
+    yield
+    # logger.info("Aplication shutdown")
+    # await bot.delete_webhook()
+    # await stop_bot()
+    # logger.info("Webhook deleted")
 
 
 def get_application() -> FastAPI:
@@ -44,7 +52,7 @@ def get_application() -> FastAPI:
         title=settings.PROJECT_NAME,
         debug=settings.DEBUG,
         version=settings.VERSION,
-        # lifespan=lifespan,
+        lifespan=lifespan,
     )
 
     application.include_router(get_apps_router())

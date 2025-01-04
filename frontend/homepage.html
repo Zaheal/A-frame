@@ -39,9 +39,15 @@
                     </li>
                     <li class="header__nav_list-item">
                         {% if user.is_authenticated %}
-                        <a class="header__nav_list-link" href="{{ url_for('profile') }}">
-                            Профиль
-                        </a>
+                            {% if user.is_superuser %}
+                            <a class="header__nav_list-link" href="{{ url_for('admin') }}">
+                                Админка
+                            </a>
+                            {% else %}
+                            <a class="header__nav_list-link" href="{{ url_for('profile') }}">
+                                Профиль
+                            </a>
+                            {% endif %}
                         {% else %}
                         <a class="header__nav_list-link" href="{{ url_for('login') }}">
                             Войти
@@ -58,9 +64,15 @@
                     <a class="menu-container__link" href="#contacts">Контакты</a>
                     <a class="menu-container__link" href="#gallery">Галерея</a>
                     {% if user.is_authenticated %}
-                    <a class="menu-container__link" href="{{ url_for('profile') }}">
-                        Профиль
-                    </a>
+                        {% if user.is_superuser %}
+                        <a class="menu-container__link" href="{{ url_for('admin') }}">
+                            Админка
+                        </a> 
+                        {% else %}
+                        <a class="menu-container__link" href="{{ url_for('profile') }}">
+                            Профиль
+                        </a>
+                        {% endif %}
                     {% else %}
                     <a class="menu-container__link" href="{{ url_for('login') }}">
                         Войти

@@ -7,8 +7,12 @@ from fastapi.responses import HTMLResponse
 from .template import templates
 from src.logger import get_logger
 from src.config.project_config import get_settings
-from src.auth.user import current_active_user
+from src.auth.user import current_active_user, current_superuser
 from src.api.controllers.user_reservation_controllers import get_user_reservations
+from src.admin.controllers.reservation_controllers import list_reservations
+from src.admin.controllers.user_controllers import list_users
+from src.schemas.auth_schemas import UserRead
+from src.schemas.base_schemas import SReservationRead
 
 settings = get_settings()
 logger = get_logger(__name__)
@@ -61,3 +65,17 @@ async def profile(
 
 
     return templates.TemplateResponse(request, "/profile-page.html", context={"user_data": user, "reservations": reservations})
+
+
+@router.get("/admin", response_class=HTMLResponse, dependencies=[Depends(current_superuser)])
+async def admin(
+        request: Request,
+        user: UserRead = Depends(current_superuser)
+        ):
+    """
+    
+    :param request:
+    :return:
+    """
+
+    return templates.TemplateResponse(request, "/admin-page.html", context={"user_data": user})
