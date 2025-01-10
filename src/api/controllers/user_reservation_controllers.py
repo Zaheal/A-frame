@@ -1,3 +1,5 @@
+from datetime import date
+
 from fastapi import APIRouter, HTTPException, Depends
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 from fastapi_cache.decorator import cache
@@ -9,11 +11,14 @@ from src.auth.user import current_active_user
 from src.models.core_models import User
 from src.logger import get_logger
 from src.config.auth.strategy import get_jwt_strategy
+from src.config.bot_config import get_config_bot
+
+from tg_bot.bot import bot
 
 router = APIRouter(tags=['choose'])
 logger = get_logger(__name__)
 strategy = get_jwt_strategy()
-
+bot_settings = get_config_bot()
 
 @router.get("/reservations/{house_id}", response_model=list[SReservationRead])
 async def get_house_reservations(uow: UOWDep, house_id: int) -> list[SReservationRead] | None:
@@ -26,7 +31,7 @@ async def get_house_reservations(uow: UOWDep, house_id: int) -> list[SReservatio
     """
     try:
         result = await ReservationService().get_reservations(uow, house_id=house_id)
-        logger.info("get_house_reservations successful")
+        logger.debug("get_house_reservations successful")
         return result
     except Exception as e:
         logger.error("get_house_reservation failed", house_id=house_id, exc_info=e)
@@ -44,7 +49,7 @@ async def get_user_reservations(uow: UOWDep, user: User = Depends(current_active
     """
     try:
         result = await ReservationService().get_reservations(uow, user_id=user.id)
-        logger.info("get_user_reservations successful")
+        logger.debug("get_user_reservations successful")
         return result
     except Exception as e:
         logger.error(f"get_user_reservations failed {user}", exc_info=e)
@@ -58,7 +63,7 @@ async def create_reservation(uow: UOWDep,
                              user: User = Depends(current_active_user)
                              ):
     """
-    Создаёт бронь, если пользователь авторизирован получает данные из бд
+    Создаёт бронь
 
 
     :param user:
@@ -68,7 +73,12 @@ async def create_reservation(uow: UOWDep,
     """
     try:
         result = await ReservationService().add_reservation(uow, reservation, user.id)
-        logger.info("create_reservation successful verify user")
+        logger.debug("create_reservation successful verify user")
+
+        user_json = user.to_dict()
+        reservation_json = SReservationAdd.model_validate(result)
+        answer = f'!!!Бронь!!!\nИмя - {user_json['name']}, почта - {user_json['email']}, номер - {user_json['number']} \nэтот крутой перец забронировал домик №{reservation_json.house_id}, \n{reservation_json.start} - {reservation_json.end}, на сумму {reservation_json.full_price}₽ {"с допом" if reservation_json.add else "без допа"}'
+        await bot.send_message(bot_settings.ADMIN_ID.split(',')[0], answer)
         return result
     except Exception as e:
         logger.error("create_reservation failed", exc_info=e)
@@ -87,11 +97,17 @@ async def delete_reservation(uow: UOWDep, reservation_id: int, user: User = Depe
     """
     try:
         result = await ReservationService().remove_reservation(uow, reservation_id, user.id)
-        logger.info("delete_reservation successful")
+        logger.debug("delete_reservation successful")
+
+        user_json = user.to_dict()
+        reservation_json = SReservationAdd.model_validate(result)
+        answer = f'Имя - {user_json['name']}, почта - {user_json['email']}, номер - {user_json['number']} \nэтот не крутой перец отменил бронь №{reservation_json.house_id}, \n{reservation_json.start} - {reservation_json.end}, на сумму {reservation_json.full_price}₽'
+        if (reservation_json.start - date.today()).days > 7: 
+            answer = "!!!Надо вернуть деньги!!!\n" + answer
+        else: 
+            answer = "!!!Отмена брони!!!\n" + answer
+        await bot.send_message(bot_settings.ADMIN_ID.split(',')[0], answer)
         return result
     except Exception as e:
         logger.error(f"delete_reservation failed {user.email}", exc_info=e)
         raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
-
-
-

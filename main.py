@@ -15,6 +15,7 @@ from src.config.bot_config import get_config_bot
 from src.config.redis_config import get_redis_settings
 from src.routes import get_apps_router
 from src.logger import get_logger
+from src.pages.template import templates
 
 from tg_bot.bot import bot, dp, start_bot, stop_bot
 from tg_bot.handlers import router
@@ -23,6 +24,7 @@ from tg_bot.handlers import router
 logger = get_logger(__name__)
 bot_settings = get_config_bot()
 redis_settings = get_redis_settings()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -36,7 +38,6 @@ async def lifespan(app: FastAPI):
     #                       )
     # logger.info(f"Webhook set to {webhook_url}")
     redis = aioredis.from_url(redis_settings.redis_url)
-    logger.info(redis)
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
     yield
     # logger.info("Aplication shutdown")
@@ -58,18 +59,28 @@ def get_application() -> FastAPI:
     application.include_router(get_apps_router())
     
 
-    # @application.post("/webhook")
-    # async def webhook(request: Request) -> None:
-    #     try:
-    #         update = Update.model_validate(await request.json(), context={"bot": bot})
-    #         await dp.feed_webhook_update(bot=bot, update=update)
-    #         logger.info("Update processed")
-    #     except Exception as e:
-    #         logger.error("Webhook error", exc_info=e)
-    #         return HTTPException(HTTP_400_BAD_REQUEST, e)
-        
+    @application.post("/webhook")
+    async def webhook(request: Request) -> None:
+        try:
+            update = Update.model_validate(await request.json(), context={"bot": bot})
+            await dp.feed_webhook_update(bot=bot, update=update)
+            logger.info("Update processed")
+        except Exception as e:
+            logger.error("Webhook error", exc_info=e)
+            return HTTPException(HTTP_400_BAD_REQUEST, e)
+
+
+    @application.exception_handler(HTTPException)
+    async def http_errors(request: Request, exc: HTTPException):
+        if exc.status_code == 401 or exc.status_code >= 500 or exc.status_code == 404:
+            return templates.TemplateResponse(request, "/error-page.html", context={"status_code": exc.status_code, "detail": exc.detail})
+        return await request.app.default_exception_handler(request, exc) 
 
     application.mount("/", StaticFiles(directory="frontend"), name='static')
+
+    @application.get("/{full_path:path}")
+    async def catch_all(full_path: str):
+        raise HTTPException(status_code=404)
 
     application.add_middleware(
         CORSMiddleware,

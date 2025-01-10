@@ -26,7 +26,7 @@ async def get_selected_house(
     """
     try:
         result = await HouseService().get_house(uow, house_id)
-        logger.info("get_selected_house successful")
+        logger.debug("get_selected_house successful")
         return result
     except Exception as e:
         logger.error("get_selected_house failed", house_id=house_id, exc_info=e)

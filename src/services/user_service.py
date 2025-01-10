@@ -1,4 +1,4 @@
-from src.schemas.auth_schemas import UserUpdate, UserCreate
+from src.schemas.auth_schemas import UserCreate
 from src.utils.unitofwork import IUnitOfWork
 
 

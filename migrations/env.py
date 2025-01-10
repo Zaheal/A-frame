@@ -8,12 +8,14 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 from src.database.db import settings_db
+from src.logger import get_logger
 from migrations.base import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
+logger = get_logger(__name__)
 
 section = config.config_ini_section
 config.set_section_option(section, "POSTGRES_HOST", settings_db.POSTGRES_HOST)
@@ -93,6 +95,7 @@ def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
 
     asyncio.run(run_async_migrations())
+    logger.info("Migrations run")
 
 
 if context.is_offline_mode():

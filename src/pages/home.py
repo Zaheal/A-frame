@@ -21,6 +21,7 @@ def homepage(
     """
 
     :param request:
+    :param user:
     :return:
     """
 
@@ -37,15 +38,17 @@ async def house_page(
     
     :param request:
     :param data:
+    :param user:
     :return:
     """
 
-    booked_dates = []
+    booked_dates = {}
     for reserv in data.busy_times:
         if reserv.end > datetime.now().date():
-            booked_dates.append([str(reserv.start)[:10], str(reserv.end)[:10]])
-
-    if not booked_dates:
-        booked_dates.append(["2023-01-01", "2023-01-02"])
+            start = str(reserv.start)
+            if booked_dates.get(start[:4]):
+                booked_dates[start[:4]].append([start[:10], str(reserv.end)[:10]])
+            else: 
+                booked_dates[start[:4]] = [[start[:10], str(reserv.end)[:10]]]
     
     return templates.TemplateResponse(request, "/house-page.html", context={"data": data, "booked_dates": booked_dates, "user": user})

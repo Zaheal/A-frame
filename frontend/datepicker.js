@@ -6,12 +6,19 @@ const bookButton = document.getElementById("calendar-button")
 
 let selectedStartDate = null;
 let selectedEndDate = null;
+let addSelected = false
+let addPrice = 0;
+let fullPrice = 0;
 
 const day = document.querySelector(".calendar-dates");
 
 const currdate = document.querySelector(".calendar-current-date");
 
 const prenexIcons = document.querySelectorAll(".calendar-navigation span");
+
+const checkbox = document.getElementById("checkAdd");
+
+const message = document.getElementById("answer")
 
 // Array of month names
 const months = [
@@ -81,11 +88,18 @@ const manipulate = () => {
             ? "active"
             : "day";
         dayElement.classList.add(isToday);
+        if (newDate.getDay() == 0 || newDate.getDay() == 6) {
+            dayElement.classList.remove("day")
+            dayElement.classList.add("weekend")
+        }
         dayElement.textContent = i;
         dayElement.dataset.date = dateString;
 
         newDate.setHours(newDate.getHours() + 3)
-        dataObject.forEach(dates => {
+        if (dataObject[year] == null) {
+            dataObject[year] = [[]]
+        }
+        dataObject[year].forEach(dates => {
             if (newDate > new Date(dates[0]) && newDate < new Date(dates[1])) {
                 dayElement.classList.add('booked');
                 dayElement.onclick = null; // Запретить клик на забронированные даты
@@ -93,7 +107,7 @@ const manipulate = () => {
                 if (dayElement.classList.contains('booked_end')) {
                     dayElement.classList.remove('booked_end')
                     dayElement.classList.add('booked');
-                    dayElement.onclick = null; // Запретить клик на забронированные даты
+                    dayElement.onclick = null;
                     return;
                 }
                 dayElement.classList.add("booked_start")
@@ -165,6 +179,25 @@ prenexIcons.forEach(icon => {
     });
 });
 
+// Выбраны ли доп услуги
+checkbox.addEventListener("change", function() {
+    if (this.checked) {
+        addSelected = true
+        addPrice = 3000
+        if (selectedStartDate && selectedEndDate) {
+            fullPrice += addPrice
+            message.textContent = `Стоимость: ${fullPrice}\u20BD`
+        }
+    } else {
+        addSelected = false
+        addPrice = 0
+        if (selectedStartDate && selectedEndDate) {
+            fullPrice -= 3000
+            message.textContent = `Стоимость: ${fullPrice}\u20BD`
+        }
+    }
+})
+
 
 function toggleDateSelection(dayElement) {
     const data = dayElement.dataset.date
@@ -187,6 +220,8 @@ function highlightRange(start, end) {
 
     const startDate = new Date(start)
     const endDate = new Date(end)
+    
+    let counterWeekend = 0
 
     for (const day of days) {
         const item = day.dataset.date;
@@ -195,17 +230,23 @@ function highlightRange(start, end) {
             || ( day.classList.contains("booked_end") && item === end )
             || ( (day.classList.contains("booked") || day.classList.contains("booked_start") || day.classList.contains("booked_end")) && (itemDate > startDate && itemDate < endDate) )) {
             resetSelection();
-            break
+            return
         } else if (item >= start && item <= end) {
+            if (itemDate.getDay() == 5 || itemDate.getDay() == 6) {
+                const nextDate = new Date(itemDate)
+                nextDate.setDate(nextDate.getDate() + 1)
+                if ((nextDate.getDay() == 6 || nextDate.getDay() == 0) && nextDate <= endDate) {
+                    counterWeekend += 1000
+                }
+            }
             day.classList.add('selected');
         }
     };
 
-    const message = document.getElementById("answer")
-
     const diffInTime = endDate - startDate
     const diffInDays = diffInTime / (1000 * 3600 * 24);
-    message.textContent = `Стоимость: ${diffInDays * costDay}\u20BD`
+    fullPrice = diffInDays * costDay + counterWeekend + addPrice
+    message.textContent = `Стоимость: ${fullPrice}\u20BD`
 }
 
 // Функция для сброса выбора
@@ -215,23 +256,19 @@ function resetSelection() {
     
     const days = document.querySelectorAll('.calendar-dates li');
     days.forEach(day => day.classList.remove('selected'));
-    const message = document.getElementById("answer")
     message.textContent = ""
 }
 
 bookButton.addEventListener('click', async function(e) {
-    const startDate = new Date(selectedStartDate)
-    const endDate = new Date(selectedEndDate)
+    e.preventDefault()
 
-    const diffInTime = endDate - startDate
-    const diffInDays = diffInTime / (1000 * 3600 * 24);
     const item = {
         start: selectedStartDate,
         end: selectedEndDate,
-        full_price: diffInDays * costDay,
+        full_price: fullPrice,
         house_id: parseInt(window.location.pathname.split("/")[2]),
+        add: addSelected,
     }
-    const message = document.getElementById("answer")
 
     if (selectedStartDate && selectedEndDate) {
         await fetch('/api/create/reservation', {
@@ -251,6 +288,7 @@ bookButton.addEventListener('click', async function(e) {
             console.error("Ошибка:", error)
             message.textContent = "Ошибка, попробуйте позже или позвоните по номеру на главной странице."
             message.style.color = "red"
+            resetSelection()
         })
     } else {
         message.textContent = 'Пожалуйста, выберите даты для бронирования.'

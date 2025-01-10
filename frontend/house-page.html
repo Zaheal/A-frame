@@ -85,7 +85,7 @@
     </header>
     <main class="main">
         <section class="section-1" id="section1">
-            <video class="video-background" autoplay loop playsinline>
+            <video class="video-background" autoplay loop playsinline muted>
                 <source src="{{ url_for('static', path='/img/video/' ~ data.id ~ '/output.mp4') }}" type="video/mp4">
                 Ваш браузер не поддерживает видеоформат.
             </video>
@@ -108,7 +108,12 @@
                     1. Основной цвет: {{ data.color }} <br>
                     2. Размер: {{ data.size }} м<sup>2</sup> <br>
                     3. Расположение на участке: {{ data.location }} <br>
-                    4. Дополнения: {{ data.add }} <br>
+                    4. Дополнения: {{ data.add }} 
+                    <label class="switch">
+                        <input type="checkbox" id="checkAdd">
+                        <span class="slider round"></span>
+                    </label>
+                      <br>
                     5. Цена одних суток: {{ data.cost }}&#8381;
                 </h2>
             </div>

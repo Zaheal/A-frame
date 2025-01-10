@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 from fastapi_cache.decorator import cache
 
@@ -15,7 +15,7 @@ logger = get_logger(__name__)
 async def create_user(uow: UOWDep, user: UserCreate):
     try:
         result = await UserService().add_user(uow, user)
-        logger.info("create_user successful")
+        logger.warning("create_user successful")
         return result
     except Exception as e:
         logger.error("create_user failed", user_id=user.email, exc_info=e)
@@ -27,7 +27,7 @@ async def create_user(uow: UOWDep, user: UserCreate):
 async def get_user_by_tg(uow: UOWDep, tg_id: int):
     try:
         result = await UserService().get_user(uow, tg_id=tg_id)
-        logger.info("get_user_by_tg successful")
+        logger.debug("get_user_by_tg successful")
         return result
     except Exception as e:
         logger.error("get_userby_tg failed", user_id=tg_id)
@@ -39,7 +39,7 @@ async def get_user_by_tg(uow: UOWDep, tg_id: int):
 async def get_user_by_email(uow: UOWDep, email: str):
     try:
         result = await UserService().get_user(uow, email=email)
-        logger.info("get_user_by_email successful")
+        logger.debug("get_user_by_email successful")
         return result
     except Exception as e:
         logger.error("get_user_by_email failed", user_id=email, exc_info=e)
@@ -51,7 +51,7 @@ async def get_user_by_email(uow: UOWDep, email: str):
 async def list_users(uow: UOWDep):
     try:
         result = await UserService().get_users(uow)
-        logger.info("list_users successful")
+        logger.debug("list_users successful")
         return result
     except Exception as e:
         logger.error("list_users failed", exc_info=e)
@@ -62,7 +62,7 @@ async def list_users(uow: UOWDep):
 async def update_user(uow: UOWDep, user_id: str, user: dict):
     try:
         result = await UserService().edit_user(uow, user, user_id)
-        logger.info("update_users successful")
+        logger.debug("update_users successful")
         return result
     except Exception as e:
         logger.error("update_user failed", user_id=user_id, exc_info=e)
@@ -73,7 +73,7 @@ async def update_user(uow: UOWDep, user_id: str, user: dict):
 async def delete_user(uow: UOWDep, user_id: str):
     try:
         result = await UserService().remove_user(uow, user_id)
-        logger.info("delete_user successful")
+        logger.debug("delete_user successful")
         return result
     except Exception as e:
         logger.error("delete_user failed", user_id=user_id, exc_info=e)

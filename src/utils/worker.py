@@ -33,5 +33,5 @@ def send_email_task(self, email_to: str, body: dict):
             server.sendmail(email_settings.MAIL_FROM, email_to, message.as_string())
         return f"Email sent to {email_to}"
     except Exception as e:
-        logger.info(f"ERROR {email_to}: {body}")
+        logger.error(f"ERROR {email_to}: {body}")
         raise self.retry(exc=e, contdown=5)

@@ -1,7 +1,6 @@
 from typing import List
 from datetime import date
 from uuid import UUID
-import enum
 
 from fastapi import Depends
 from fastapi_users.db import (
@@ -10,18 +9,13 @@ from fastapi_users.db import (
     SQLAlchemyBaseUserTableUUID,
 )
 
-from sqlalchemy import ForeignKey, String, Integer, func
+from sqlalchemy import ForeignKey, String, Integer, func, Boolean
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import Date
 
 from .base_model import Base
 from src.database.db import db_helper
-
-
-class VarOfPaid(str, enum.Enum):
-    paid = "paid"
-    not_paid = "not_paid"
 
 
 class OAuthAccount(SQLAlchemyBaseOAuthAccountTableUUID, Base):
@@ -31,7 +25,7 @@ class OAuthAccount(SQLAlchemyBaseOAuthAccountTableUUID, Base):
 class User(SQLAlchemyBaseUserTableUUID, Base):
     created_at: Mapped[date] = mapped_column(Date(), server_default=func.current_date())
     tg_id: Mapped[int] = mapped_column(Integer, nullable=True)
-    number: Mapped[str] = mapped_column(String(length=10), nullable=True)
+    number: Mapped[str] = mapped_column(String(length=18), nullable=True)
     name: Mapped[str]
     oauth_accounts: Mapped[list[OAuthAccount]] = relationship(
         "OAuthAccount", lazy="joined"
@@ -77,7 +71,6 @@ class HouseModel(Base):
     color: Mapped[str]
     size: Mapped[int]
     cost: Mapped[int]
-    location: Mapped[str]
     add: Mapped[str]
     description: Mapped[str]
 
@@ -91,7 +84,8 @@ class ReservationModel(Base):
     start: Mapped[date] = mapped_column(Date())
     end: Mapped[date] = mapped_column(Date())
     full_price: Mapped[int]
-    was_paid: Mapped[str] = mapped_column(String(), default="not_paid")
+    was_paid: Mapped[bool] = mapped_column(Boolean(), default=False)
+    add: Mapped[bool] = mapped_column(Boolean())
 
     house_id: Mapped[int] = mapped_column(ForeignKey("houses.id"))
     user_id: Mapped[UUID] = mapped_column(ForeignKey("user.id"), nullable=True)

@@ -1,10 +1,10 @@
 import uuid
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
 from src.schemas.auth_schemas import UserRead, UserCreate, UserUpdate
 from src.models.core_models import User
-from src.auth.user import get_user_manager, auth_backend, current_active_user
+from src.auth.user import get_user_manager, auth_backend
 from src.auth.my_fastapi_users import MyFastAPIUsers
 from src.auth.oauth import google_oauth_client
 from src.config.auth_config import get_auth_settings

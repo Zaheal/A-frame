@@ -15,7 +15,7 @@ logger = get_logger(__name__)
 async def create_house(uow: UOWDep, house: SHouseAdd):
     try:
         result = await HouseService().add_house(uow, house)
-        logger.info("create_house successful")
+        logger.debug("create_house successful")
         return result
     except Exception as e:
         logger.error("create_house failed", exc_info=e)
@@ -26,7 +26,7 @@ async def create_house(uow: UOWDep, house: SHouseAdd):
 async def list_houses(uow: UOWDep):
     try:
         result = await HouseService().get_houses(uow)
-        logger.info("list_houses successful")
+        logger.debug("list_houses successful")
         return result
     except Exception as e:
         logger.error("list_houses failed", exc_info=e)
@@ -37,7 +37,7 @@ async def list_houses(uow: UOWDep):
 async def update_house(uow: UOWDep, house_id: int, house: SHouseEdit):
     try:
         result = await HouseService().edit_house(uow, house, house_id)
-        logger.info("update_house successful")
+        logger.debug("update_house successful")
         return result
     except Exception as e:
         logger.error("update_house failed", house_id=house_id, exc_info=e)
@@ -48,7 +48,7 @@ async def update_house(uow: UOWDep, house_id: int, house: SHouseEdit):
 async def delete_house(uow: UOWDep, house_id: int):
     try:
         result = await HouseService().remove_house(uow, house_id)
-        logger.info("delete_house successful")
+        logger.debug("delete_house successful")
         return result
     except Exception as e:
         logger.error("delete_house failed", house_id=house_id, exc_info=e)

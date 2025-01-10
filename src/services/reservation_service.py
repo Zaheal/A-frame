@@ -1,15 +1,12 @@
 import uuid
 from typing import Optional
 
-from starlette.status import HTTP_403_FORBIDDEN
-
 from src.schemas.base_schemas import SReservationAdd, SReservationEdit, SReservation
 from src.utils.unitofwork import IUnitOfWork
-from src.auth.user import current_superuser
 
 
 class ReservationService:
-    async def add_reservation(self, uow: IUnitOfWork, reservation: SReservationAdd, user_id: uuid.UUID) -> int:
+    async def add_reservation(self, uow: IUnitOfWork, reservation: SReservationAdd, user_id: uuid.UUID):
         """
         Записывает бронь в базу данных и возвращает id брони
 
@@ -38,21 +35,21 @@ class ReservationService:
             reservations = await uow.reservations.get_multi(**filters)
             return reservations
 
-    async def edit_reservation(self, uow: IUnitOfWork, reservation: SReservationEdit, reservation_id: int) -> int:
+    async def edit_reservation(self, uow: IUnitOfWork, reservation: SReservationEdit, reservation_id: int):
         """
-        Редактирует бронь и возвращает её id
+        Редактирует бронь и возвращает её
 
         :param uow:
         :param reservation_id:
         :param reservation:
-        :return reservation_id:
+        :return reservation_data:
         """
         reservations_dict = reservation.model_dump()
         async with uow:
-            reservation_id = await uow.reservations.update(pk=reservation_id, data=reservations_dict)
-            return reservation_id
+            reservation_data = await uow.reservations.update(pk=reservation_id, data=reservations_dict)
+            return reservation_data
 
-    async def remove_reservation(self, uow: IUnitOfWork, reservation_id: int, user_id: Optional[uuid.UUID] = None) -> None:
+    async def remove_reservation(self, uow: IUnitOfWork, reservation_id: int, user_id: Optional[uuid.UUID] | None = None):
         """
         Удаляет бронь из базы данных
 
@@ -62,11 +59,8 @@ class ReservationService:
         :return:
         """
         async with uow:
-            try:
-                current_superuser()
-            except HTTP_403_FORBIDDEN as _:  # выполнится если пользователь обычный обыватель
-                await uow.reservations.delete(id=reservation_id, user_id=user_id)
-                return
-            else:  # выполнится если пользователь админ
-                await uow.reservations.delete(id=reservation_id)
-                return
+            if user_id:
+                return await uow.reservations.delete(id=reservation_id, user_id=user_id)
+            else:  
+                return await uow.reservations.delete(id=reservation_id)
+

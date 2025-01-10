@@ -1,4 +1,3 @@
-import re
 from datetime import date
 
 from fastapi import APIRouter, Request, Depends
@@ -7,12 +6,9 @@ from fastapi.responses import HTMLResponse
 from .template import templates
 from src.logger import get_logger
 from src.config.project_config import get_settings
-from src.auth.user import current_active_user, current_superuser
+from src.auth.user import current_active_user, current_superuser, current_active_user_security
 from src.api.controllers.user_reservation_controllers import get_user_reservations
-from src.admin.controllers.reservation_controllers import list_reservations
-from src.admin.controllers.user_controllers import list_users
 from src.schemas.auth_schemas import UserRead
-from src.schemas.base_schemas import SReservationRead
 
 settings = get_settings()
 logger = get_logger(__name__)
@@ -42,7 +38,7 @@ def get_month_word(month):
         return "месяцев"
 
 
-@router.get("/profile", response_class=HTMLResponse)
+@router.get("/profile", response_class=HTMLResponse, dependencies=[Depends(current_active_user_security)])
 async def profile(
         request: Request,
         reservations = Depends(get_user_reservations),
@@ -51,6 +47,8 @@ async def profile(
     """
     
     :param request:
+    :param reservations:
+    :param user:
     :return:
     """
 
@@ -75,6 +73,7 @@ async def admin(
     """
     
     :param request:
+    :param user:
     :return:
     """
 

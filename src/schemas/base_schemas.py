@@ -4,7 +4,6 @@ import uuid
 from pydantic import BaseModel
 
 from .auth_schemas import User
-from ..models.core_models import VarOfPaid
 
 
 class SHouse(BaseModel):
@@ -13,7 +12,6 @@ class SHouse(BaseModel):
     color: str
     size: int
     cost: int
-    location: str
     add: str
     description: str
 
@@ -28,7 +26,6 @@ class SHouseAdd(BaseModel):
     color: str
     size: int
     cost: int
-    location: str
     add: str
     description: str
 
@@ -46,7 +43,8 @@ class SReservation(BaseModel):
     start: date
     end: date
     full_price: int
-    was_paid: VarOfPaid = VarOfPaid.not_paid
+    was_paid: bool = False
+    add: bool
 
     house_id: int
     user_id: uuid.UUID
@@ -59,13 +57,17 @@ class SReservationAdd(BaseModel):
     start: date
     end: date
     full_price: int
-    was_paid: VarOfPaid = VarOfPaid.not_paid
+    was_paid: bool = False
+    add: bool
 
     house_id: int
 
+    class Config:
+        from_attributes = True
 
-class SReservationEdit(SReservationAdd):
-    pass
+
+class SReservationEdit(BaseModel):
+    was_paid: bool = False
 
 
 class SReservationRead(SReservationAdd):

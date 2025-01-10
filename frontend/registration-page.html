@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://www.sng-it.ru/bitrix/templates/master/js/jquery.inputmask.bundle.min.js"></script>
     <link rel="stylesheet" href="{{ url_for( 'static', path='/registration-page-style.css' ) }}">
     <link id="favicon" rel="icon" type="image/x-icon" href="/img/svg/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,13 +68,15 @@
             <form class="section-2__input-block" id="formData">
                 <input class="section-2__input-block_input _contact" type="text" name="name" placeholder="Имя" required>
                 <input class="section-2__input-block_input _contact" type="email" name="email" placeholder="Почта" required>
-                <input class="section-2__input-block_input _name" type="tel" name="number" placeholder="Номер" required>
+                <input class="section-2__input-block_input _name" id="tel" type="tel" maxlength="18" name="number" placeholder="Номер" required>
                 <input class="section-2__input-block_input _password1" type="password" name="password" placeholder="Пароль" required>
                 <button class="section-2__input-block_button">Зарегистрироваться</button>
                 <div id="message" style="margin-top: 10px;"></div>
                 <a href="{{ url_for('login') }}" class="section-2__input-block_link _singIn">Войти</a>
             </form>
             <script>
+                $("#tel").inputmask("+7 (999) 999-99-99"); // Устанавливаем маску
+
                 const formElement = document.getElementById('formData');
                 formElement.addEventListener('submit', async (event) => {
                     event.preventDefault();

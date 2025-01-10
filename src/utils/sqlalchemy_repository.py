@@ -13,22 +13,23 @@ class SqlAlchemyRepository(AbstractRepository):
 
     async def create(self, data: dict) -> int:
         async with self._session_factory as session:
-            stmt = insert(self.model).values(**data).returning(self.model.id)
+            stmt = insert(self.model).values(**data).returning(self.model)
             res = await session.execute(stmt)
             await session.commit()
             return res.scalar_one()
 
     async def update(self, pk: str, data: dict) -> int:
         async with self._session_factory as session:
-            stmt = update(self.model).values(**data).filter_by(id=pk).returning(self.model.id)
+            stmt = update(self.model).values(**data).filter_by(id=pk).returning(self.model)
             res = await session.execute(stmt)
             await session.commit()
             return res.scalar_one()
 
     async def delete(self, **filters) -> None:
         async with self._session_factory as session:
-            await session.execute(delete(self.model).filter_by(**filters))
+            res = await session.execute(delete(self.model).filter_by(**filters).returning(self.model))
             await session.commit()
+            return res.scalar_one()
 
     async def get_single(self, **filters) -> BaseModel | None:
         async with self._session_factory as session:
