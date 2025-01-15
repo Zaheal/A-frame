@@ -18,8 +18,8 @@ async def create_house(uow: UOWDep, house: SHouseAdd):
         logger.debug("create_house successful")
         return result
     except Exception as e:
-        logger.error("create_house failed", exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, str(e))
+        logger.error(f"create_house failed {house.style}", exc_info=e)
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
 @router.get("/houses/", dependencies=[Depends(current_superuser)])
@@ -30,7 +30,7 @@ async def list_houses(uow: UOWDep):
         return result
     except Exception as e:
         logger.error("list_houses failed", exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, str(e))
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
 @router.put("/house/{house_id}", dependencies=[Depends(current_superuser)])
@@ -41,7 +41,7 @@ async def update_house(uow: UOWDep, house_id: int, house: SHouseEdit):
         return result
     except Exception as e:
         logger.error("update_house failed", house_id=house_id, exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, str(e))
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
 @router.delete("/house/{house_id}", status_code=HTTP_204_NO_CONTENT, dependencies=[Depends(current_superuser)])
@@ -52,4 +52,4 @@ async def delete_house(uow: UOWDep, house_id: int):
         return result
     except Exception as e:
         logger.error("delete_house failed", house_id=house_id, exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, str(e))
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))

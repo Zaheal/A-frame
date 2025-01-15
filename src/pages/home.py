@@ -25,7 +25,7 @@ def homepage(
     :return:
     """
 
-    return templates.TemplateResponse(request, "/homepage.html", context={'user': user})
+    return templates.TemplateResponse(request, "homepage.html", context={'user': user})
 
 
 @router.get("/house/{house_id}", response_class=HTMLResponse)

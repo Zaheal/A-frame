@@ -29,5 +29,5 @@ async def get_selected_house(
         logger.debug("get_selected_house successful")
         return result
     except Exception as e:
-        logger.error("get_selected_house failed", house_id=house_id, exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, e)
+        logger.error(f"get_selected_house failed, {house_id}", exc_info=e)
+        raise HTTPException(HTTP_400_BAD_REQUEST, e)

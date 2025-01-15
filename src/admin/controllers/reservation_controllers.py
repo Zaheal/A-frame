@@ -21,7 +21,7 @@ async def create_reservation(uow: UOWDep, reservation: SReservationAdd, user: Us
         return result    
     except Exception as e:
         logger.error("create_reservation failed", exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, str(e))
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
 @router.get("/reservations")
@@ -33,7 +33,7 @@ async def list_reservations(uow: UOWDep):
         return result    
     except Exception as e:
         logger.error("list_reservations failed", exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, str(e))
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
 @router.post("/update/reservation/{reservation_id}")
@@ -44,7 +44,7 @@ async def update_reservation(uow: UOWDep, reservation_id: int, reservation: SRes
         return result    
     except Exception as e:
         logger.error("update_reservation failed", reservation_id=reservation_id, exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, str(e))
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
 @router.post("/delete/reservation/{reservation_id}", status_code=HTTP_204_NO_CONTENT)
@@ -55,4 +55,4 @@ async def delete_reservation(uow: UOWDep, reservation_id: int):
         return result    
     except Exception as e:
         logger.error("delete_reservation failed", reservation_id=reservation_id, exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, str(e))
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))

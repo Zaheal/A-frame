@@ -9,10 +9,10 @@ README-secret.md
 .venv/
 .idea/
 .vscode/
-logs/
 .DS_Store
 Thumbs.db
 .env
 docs/
 tests/
 redisdata
+__pycache__

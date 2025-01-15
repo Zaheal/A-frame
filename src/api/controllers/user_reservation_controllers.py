@@ -34,8 +34,8 @@ async def get_house_reservations(uow: UOWDep, house_id: int) -> list[SReservatio
         logger.debug("get_house_reservations successful")
         return result
     except Exception as e:
-        logger.error("get_house_reservation failed", house_id=house_id, exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, e)
+        logger.error(f"get_house_reservation failed {house_id}", exc_info=e)
+        raise HTTPException(HTTP_400_BAD_REQUEST, e)
 
 
 @router.get("/my/reservations")
@@ -52,7 +52,7 @@ async def get_user_reservations(uow: UOWDep, user: User = Depends(current_active
         logger.debug("get_user_reservations successful")
         return result
     except Exception as e:
-        logger.error(f"get_user_reservations failed {user}", exc_info=e)
+        logger.error(f"get_user_reservations failed {user.email}", exc_info=e)
         return HTTPException(HTTP_400_BAD_REQUEST, e)
 
 
@@ -75,14 +75,14 @@ async def create_reservation(uow: UOWDep,
         result = await ReservationService().add_reservation(uow, reservation, user.id)
         logger.debug("create_reservation successful verify user")
 
-        user_json = user.to_dict()
-        reservation_json = SReservationAdd.model_validate(result)
-        answer = f'!!!Бронь!!!\nИмя - {user_json['name']}, почта - {user_json['email']}, номер - {user_json['number']} \nэтот крутой перец забронировал домик №{reservation_json.house_id}, \n{reservation_json.start} - {reservation_json.end}, на сумму {reservation_json.full_price}₽ {"с допом" if reservation_json.add else "без допа"}'
-        await bot.send_message(bot_settings.ADMIN_ID.split(',')[0], answer)
+        # user_json = user.to_dict()
+        # reservation_json = SReservationAdd.model_validate(result)
+        # answer = f'!!!Бронь!!!\nИмя - {user_json['name']}, почта - {user_json['email']}, номер - {user_json['number']} \nэтот крутой перец забронировал домик №{reservation_json.house_id}, \n{reservation_json.start} - {reservation_json.end}, на сумму {reservation_json.full_price}₽ {"с допом" if reservation_json.add else "без допа"}'
+        # await bot.send_message(bot_settings.ADMIN_ID.split(',')[0], answer)
         return result
     except Exception as e:
-        logger.error("create_reservation failed", exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, e)
+        logger.error(f"create_reservation failed, {user.email}", exc_info=e)
+        raise HTTPException(HTTP_400_BAD_REQUEST, e)
 
 
 @router.post("/delete/reservation/{reservation_id}", status_code=HTTP_204_NO_CONTENT)
@@ -99,14 +99,14 @@ async def delete_reservation(uow: UOWDep, reservation_id: int, user: User = Depe
         result = await ReservationService().remove_reservation(uow, reservation_id, user.id)
         logger.debug("delete_reservation successful")
 
-        user_json = user.to_dict()
-        reservation_json = SReservationAdd.model_validate(result)
-        answer = f'Имя - {user_json['name']}, почта - {user_json['email']}, номер - {user_json['number']} \nэтот не крутой перец отменил бронь №{reservation_json.house_id}, \n{reservation_json.start} - {reservation_json.end}, на сумму {reservation_json.full_price}₽'
-        if (reservation_json.start - date.today()).days > 7: 
-            answer = "!!!Надо вернуть деньги!!!\n" + answer
-        else: 
-            answer = "!!!Отмена брони!!!\n" + answer
-        await bot.send_message(bot_settings.ADMIN_ID.split(',')[0], answer)
+        # user_json = user.to_dict()
+        # reservation_json = SReservationAdd.model_validate(result)
+        # answer = f'Имя - {user_json['name']}, почта - {user_json['email']}, номер - {user_json['number']} \nэтот не крутой перец отменил бронь №{reservation_json.house_id}, \n{reservation_json.start} - {reservation_json.end}, на сумму {reservation_json.full_price}₽'
+        # if (reservation_json.start - date.today()).days > 7: 
+        #     answer = "!!!Надо вернуть деньги!!!\n" + answer
+        # else: 
+        #     answer = "!!!Отмена брони!!!\n" + answer
+        # await bot.send_message(bot_settings.ADMIN_ID.split(',')[0], answer)
         return result
     except Exception as e:
         logger.error(f"delete_reservation failed {user.email}", exc_info=e)

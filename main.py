@@ -4,11 +4,13 @@ import uvicorn
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from starlette.status import HTTP_400_BAD_REQUEST
 from aiogram.types import Update
 from redis import asyncio as aioredis
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from src.config.project_config import get_settings
 from src.config.bot_config import get_config_bot
@@ -16,6 +18,7 @@ from src.config.redis_config import get_redis_settings
 from src.routes import get_apps_router
 from src.logger import get_logger
 from src.pages.template import templates
+from src.middleware import LoggingMiddleware
 
 from tg_bot.bot import bot, dp, start_bot, stop_bot
 from tg_bot.handlers import router
@@ -56,6 +59,8 @@ def get_application() -> FastAPI:
         lifespan=lifespan,
     )
 
+    Instrumentator().instrument(application).expose(application)
+
     application.include_router(get_apps_router())
     
 
@@ -72,15 +77,16 @@ def get_application() -> FastAPI:
 
     @application.exception_handler(HTTPException)
     async def http_errors(request: Request, exc: HTTPException):
-        if exc.status_code == 401 or exc.status_code >= 500 or exc.status_code == 404:
-            return templates.TemplateResponse(request, "/error-page.html", context={"status_code": exc.status_code, "detail": exc.detail})
-        return await request.app.default_exception_handler(request, exc) 
+        return templates.TemplateResponse(request, "/error-page.html", context={"status_code": exc.status_code, "detail": exc.detail})
+
 
     application.mount("/", StaticFiles(directory="frontend"), name='static')
+
 
     @application.get("/{full_path:path}")
     async def catch_all(full_path: str):
         raise HTTPException(status_code=404)
+
 
     application.add_middleware(
         CORSMiddleware,
@@ -89,6 +95,8 @@ def get_application() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    application.add_middleware(LoggingMiddleware)
 
     return application
 

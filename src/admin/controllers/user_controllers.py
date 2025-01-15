@@ -19,7 +19,7 @@ async def create_user(uow: UOWDep, user: UserCreate):
         return result
     except Exception as e:
         logger.error("create_user failed", user_id=user.email, exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, str(e))
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
 @router.get("/get/user/tg/{tg_id}")
@@ -31,7 +31,7 @@ async def get_user_by_tg(uow: UOWDep, tg_id: int):
         return result
     except Exception as e:
         logger.error("get_userby_tg failed", user_id=tg_id)
-        return HTTPException(HTTP_400_BAD_REQUEST, str(e))
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
     
 
 @router.get("/get/user/email/{email}")
@@ -43,7 +43,7 @@ async def get_user_by_email(uow: UOWDep, email: str):
         return result
     except Exception as e:
         logger.error("get_user_by_email failed", user_id=email, exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, str(e))
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
 @router.get("/users/", response_model=list[UserRead])
@@ -55,7 +55,7 @@ async def list_users(uow: UOWDep):
         return result
     except Exception as e:
         logger.error("list_users failed", exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, str(e))
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
 @router.put("/update/user/{user_id}")
@@ -66,7 +66,7 @@ async def update_user(uow: UOWDep, user_id: str, user: dict):
         return result
     except Exception as e:
         logger.error("update_user failed", user_id=user_id, exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, str(e))
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
 
 
 @router.post("/delete/user/{user_id}", status_code=HTTP_204_NO_CONTENT)
@@ -77,4 +77,4 @@ async def delete_user(uow: UOWDep, user_id: str):
         return result
     except Exception as e:
         logger.error("delete_user failed", user_id=user_id, exc_info=e)
-        return HTTPException(HTTP_400_BAD_REQUEST, str(e))
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
