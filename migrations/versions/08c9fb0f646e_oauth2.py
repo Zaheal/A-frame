@@ -60,8 +60,8 @@ def upgrade() -> None:
     op.create_index(op.f('ix_oauth_account_account_id'), 'oauth_account', ['account_id'], unique=False)
     op.create_index(op.f('ix_oauth_account_oauth_name'), 'oauth_account', ['oauth_name'], unique=False)
     op.create_table('reservations',
-    sa.Column('start', sa.Date(), nullable=False),
-    sa.Column('end', sa.Date(), nullable=False),
+    sa.Column('start', sa.Date(), nullable=False, unique=True),
+    sa.Column('end', sa.Date(), nullable=False, unique=True),
     sa.Column('full_price', sa.Integer(), nullable=False),
     sa.Column('was_paid', sa.Boolean(), nullable=False),
     sa.Column('add', sa.Boolean(), nullable=False),

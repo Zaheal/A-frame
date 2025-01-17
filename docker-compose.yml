@@ -55,6 +55,22 @@ services:
     restart: unless-stopped
     volumes:
       - ./redisdata:/data
+  
+  nginx:
+    container_name: nginx
+    image: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/user_conf.d:ro
+    depends_on:
+      - app
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100k"
+        max-file: "1"
 
   celery_worker:
     container_name: celery_worker
