@@ -3,6 +3,8 @@ let year = date.getFullYear();
 let month = date.getMonth();
 
 const bookButton = document.getElementById("calendar-button")
+const modalButton = document.getElementById("modal-button")
+const unButton = document.getElementById("unauthorized-button") 
 
 let selectedStartDate = null;
 let selectedEndDate = null;
@@ -20,7 +22,6 @@ const checkbox = document.getElementById("checkAdd");
 
 const message = document.getElementById("answer")
 
-// Array of month names
 const months = [
     "Январь",
     "Февраль",
@@ -36,20 +37,16 @@ const months = [
     "Декабрь"
 ];
 
-// Function to generate the calendar
+
 const manipulate = () => {
     day.innerHTML = ''
 
-    // Get the first day of the month
     let dayone = new Date(year, month, 7).getDay();
 
-    // Get the last date of the month
     let lastdate = new Date(year, month + 1, 0).getDate();
 
-    // Get the day of the last date of the month
     let dayend = new Date(year, month, lastdate).getDay();
 
-    // Get the last date of the previous month
     let monthlastdate = new Date(year, month, 0).getDate();
 
     // Декодирование HTML-энкодированных символов
@@ -66,7 +63,6 @@ const manipulate = () => {
     // Преобразуем строку в объект
     const dataObject = JSON.parse(jsonString);
 
-    // Loop to add the last dates of the previous month
     for (let i = dayone; i > 0; i--) {
         const dayElement = document.createElement('li')
         dayElement.textContent = monthlastdate - i + 1
@@ -74,20 +70,20 @@ const manipulate = () => {
         day.appendChild(dayElement)
     }
 
-    // Loop to add the dates of the current month
     for (let i = 1; i <= lastdate; i++) {
         const newDate = new Date(year, month, i);
         const dateSrc = newDate.toLocaleDateString('ru-Ru', {year: 'numeric', month: 'numeric', day: 'numeric'})
         const dateString = dateSrc.split(".").reverse().join("-");
 
         const dayElement = document.createElement('li')
-        // Check if the current date is today
+
         let isToday = i === date.getDate()
             && month === new Date().getMonth()
             && year === new Date().getFullYear()
             ? "active"
             : "day";
         dayElement.classList.add(isToday);
+
         if (newDate.getDay() == 0 || newDate.getDay() == 6) {
             dayElement.classList.remove("day")
             dayElement.classList.add("weekend")
@@ -125,7 +121,6 @@ const manipulate = () => {
         day.appendChild(dayElement);
     }
 
-    // Loop to add the first dates of the next month
     for (let i = dayend; i < 6; i++) {
         const dayElement = document.createElement('li')
         dayElement.textContent = i - dayend + 1
@@ -133,8 +128,6 @@ const manipulate = () => {
         day.appendChild(dayElement)
     }
 
-    // Update the text of the current date element 
-    // with the formatted current month and year
     currdate.innerText = `${months[month]} ${year}`;
 }
 
@@ -143,38 +136,26 @@ manipulate();
 const activeData = document.querySelector(".active").dataset.date
 const activeDate = new Date(activeData)
 
-// Attach a click event listener to each icon
 prenexIcons.forEach(icon => {
 
-    // When an icon is clicked
     icon.addEventListener("click", () => {
 
-        // Check if the icon is "calendar-prev"
-        // or "calendar-next"
         month = icon.id === "calendar-prev" ? month - 1 : month + 1;
 
-        // Check if the month is out of range
         if (month < 0 || month > 11) {
 
-            // Set the date to the first day of the 
-            // month with the new year
             date = new Date(year, month, new Date().getDate());
 
-            // Set the year to the new year
             year = date.getFullYear();
 
-            // Set the month to the new month
             month = date.getMonth();
         }
 
         else {
 
-            // Set the date to the current date
             date = new Date();
         }
 
-        // Call the manipulate function to 
-        // update the calendar display
         manipulate();
     });
 });
@@ -259,38 +240,104 @@ function resetSelection() {
     message.textContent = ""
 }
 
-bookButton.addEventListener('click', async function(e) {
-    e.preventDefault()
+if (bookButton) {
+    bookButton.addEventListener('click', async function(e) {
+        e.preventDefault()
 
-    const item = {
-        start: selectedStartDate,
-        end: selectedEndDate,
-        full_price: fullPrice,
-        house_id: parseInt(window.location.pathname.split("/")[2]),
-        add: addSelected,
-    }
+        if (selectedStartDate && selectedEndDate) {
+            const items = {
+                start: selectedStartDate,
+                end: selectedEndDate,
+                full_price: fullPrice,
+                house_id: parseInt(window.location.pathname.split("/")[2]),
+                add: addSelected,
+            }
+
+            await fetch('/api/create/reservation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(items)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Ошибка сервера, не удалось зарезервировать домик!")
+                }
+                message.textContent = "Вы успешно зарезервировали домик! В скором времени с вами свяжутся. Можете отменить бронь у себя в профиле."
+            })
+            .catch(error => {
+                console.error("Ошибка:", error)
+                message.textContent = "Ошибка, попробуйте позже или позвоните по номеру на главной странице."
+                message.style.color = "red"
+                resetSelection()
+            })
+        } else {
+            message.textContent = "Пожалуйста, выберите даты для бронирования"
+        }
+    });
+}
+
+function openModal() {
+    const modalOverlay = document.getElementById('modalOverlay');
+    modalOverlay.classList.add('active');
+}
+
+
+function closeModal() {
+    const modalOverlay = document.getElementById('modalOverlay');
+    modalOverlay.classList.remove('active');
+}
+
+if (unButton) {
+    unButton.addEventListener('click', function (e) {
+        e.preventDefault()
+
+        if (selectedStartDate && selectedEndDate) {
+            openModal()
+        } else {
+            message.textContent = "Пожалуйста, выберите даты для бронирования"
+        }
+    })
+}
+
+
+modalButton.addEventListener('click', async function (event) {
+    event.preventDefault();
+    const modalMessage = document.getElementById("modal-answer")
 
     if (selectedStartDate && selectedEndDate) {
-        await fetch('/api/create/reservation', {
+
+        const items = {
+            start: selectedStartDate,
+            end: selectedEndDate,
+            full_price: fullPrice,
+            house_id: parseInt(window.location.pathname.split("/")[2]),
+            add: addSelected,
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            number: document.getElementById("number").value,
+        }
+        console.log(items)
+        await fetch('/api/create/temporary', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(item)
+            body: JSON.stringify(items)
         })
         .then(response => {
             if (!response.ok) {
                 throw new Error("Ошибка сервера, не удалось зарезервировать домик!")
             }
-            message.textContent = "Вы успешно зарезервировали домик! В скором времени с вами свяжутся. Можете отменить бронь у себя в профиле."
+            alert("Вы успешно зарезервировали домик! В скором времени с вами свяжутся. Можете отменить бронь у себя в профиле.")
+            location.reload()
         })
         .catch(error => {
             console.error("Ошибка:", error)
-            message.textContent = "Ошибка, попробуйте позже или позвоните по номеру на главной странице."
-            message.style.color = "red"
-            resetSelection()
+            alert("Ошибка, попробуйте позже или позвоните по номеру на главной странице.")
         })
     } else {
-        message.textContent = 'Пожалуйста, выберите даты для бронирования.'
+        modalMessage.textContent = "Пожалуйста, выберите даты для бронирования"
     }
 });

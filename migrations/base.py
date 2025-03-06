@@ -3,4 +3,5 @@ from src.models.core_models import (
                                     HouseModel,
                                     ReservationModel,
                                     User,
+                                    TemporaryReservationModel
                                     )

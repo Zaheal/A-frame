@@ -26,6 +26,8 @@ li {
 
 img {
     vertical-align: top;
+    cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
 h1,
@@ -208,8 +210,8 @@ body {
 
 /* ---MAIN----------------------------------------- */
 
-.main {
-}
+/* .main {
+} */
 
 /* ---SECTION-1---------------------------------------- */
 
@@ -631,7 +633,12 @@ body {
 .section-5__title {
     font-size: 72px;
     color: #212529;
+    margin-bottom: 20px;
+}
+
+.section-5__subtext {
     margin-bottom: 53px;
+    font-size: 34px;
 }
 
 .section-5__photo-block {
@@ -660,6 +667,16 @@ body {
     gap: 17px;
     margin-top: 11px;
     margin-bottom: 14px;
+}
+
+.section-5__photo-text {
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    font-size: 48px; 
+    color: white;
+    font-weight: bold;
 }
 
 /* ---1020PX---------------------------------------- */
@@ -710,15 +727,9 @@ body {
     width: 100%;
 }
 
-.footer-block {
-}
-
 .footer-block__title {
     font-size: 48px;
     color:#212529;
-}
-
-.footer-block__list {
 }
 
 .footer-block__list_item {
@@ -807,4 +818,25 @@ body {
         font-size: 10px;
         margin-left: 20px;
     }
+}
+
+.fullscreen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.fullscreen-overlay img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border-radius: 8px;
 }

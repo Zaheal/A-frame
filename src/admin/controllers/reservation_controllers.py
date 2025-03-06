@@ -4,6 +4,7 @@ from fastapi_cache.decorator import cache
 
 from src.schemas.base_schemas import SReservationAdd, SReservationEdit
 from src.services.reservation_service import ReservationService
+from src.services.temporary_reservation_service import TemporaryReservationService
 from src.utils.dependencies import UOWDep
 from src.models.core_models import User
 from src.auth.user import current_active_user
@@ -28,9 +29,11 @@ async def create_reservation(uow: UOWDep, reservation: SReservationAdd, user: Us
 @cache(expire=60)
 async def list_reservations(uow: UOWDep):
     try:
-        result = await ReservationService().get_reservations(uow)
+        reservations = await ReservationService().get_reservations(uow)
+        temp_reservations = await TemporaryReservationService().get_reservations(uow)
+        result = reservations + temp_reservations
         logger.debug("list_reservations successful")
-        return result    
+        return result
     except Exception as e:
         logger.error("list_reservations failed", exc_info=e)
         raise HTTPException(HTTP_400_BAD_REQUEST, str(e))

@@ -69,7 +69,7 @@ async function loadReservations() {
             <th class="section-2__table_thead-item _number_reserv_column" data-type="string">
                 Номер
             </th>
-            <th class="section-2" data-type="string">
+            <th class="section-2 _delete_column" data-type="string">
                 Удалить
             </th>
         </thead>

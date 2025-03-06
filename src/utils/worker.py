@@ -1,12 +1,17 @@
 from email.message import EmailMessage
 import smtplib
+from datetime import datetime
 
 from celery import Celery
+from celery.schedules import crontab
 
 from src.config.celery_config import get_celery_settings
 from src.logger import get_logger
 from src.config.email_config import get_config_email
 from src.language.ru_lang import Dictionary
+from src.utils.dependencies import UOWDep
+from src.services.reservation_service import ReservationService
+from src.services.temporary_reservation_service import TemporaryReservationService
 
 settings = get_celery_settings()
 email_settings = get_config_email()
@@ -35,3 +40,23 @@ def send_email_task(self, email_to: str, body: dict):
     except Exception as e:
         logger.error(f"ERROR {email_to}: {body}")
         raise self.retry(exc=e, contdown=5)
+
+
+@celery.task
+async def delete_oldest_reservations_task(uow: UOWDep):
+    try:
+        today = datetime.now().date()
+        await ReservationService().remove_old_reservations(uow, today)
+        await TemporaryReservationService().remove_old_reservations(uow, today)
+        logger.info("Old records removed")
+    except Exception as e:
+        logger.error(f'ERROR ', exc_info=e)
+        raise e
+
+    
+celery.conf.beat_schedule = {
+    'delete-old-reservations': {
+        'task': 'tasks.delete_oldest_reservations_task',
+        'schedule': crontab(hour=2, minute=0)
+    }
+}

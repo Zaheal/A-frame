@@ -14,9 +14,10 @@ services:
       - redis
       - postgres
     volumes:
-      - ./logs:/app/logs
+      - .:/app
 
   postgres:
+    container_name: postgres
     image: postgres:16.3
     environment:
       POSTGRES_DB: db
@@ -39,6 +40,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   redis:
+    container_name: redis
     image: redis:7.4.1
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
@@ -55,7 +57,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./redisdata:/data
-  
+
   nginx:
     container_name: nginx
     image: nginx
@@ -63,7 +65,9 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./nginx:/etc/nginx/user_conf.d:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     depends_on:
       - app
     logging:
@@ -71,6 +75,14 @@ services:
       options:
         max-size: "100k"
         max-file: "1"
+
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email zakharlepskie@gmail.com -d aframe-kam.ru --agree-tos
 
   celery_worker:
     container_name: celery_worker

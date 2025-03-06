@@ -11,14 +11,14 @@ class SqlAlchemyRepository(AbstractRepository):
     def __init__(self, db_session: AsyncSession):
         self._session_factory = db_session
 
-    async def create(self, data: dict) -> int:
+    async def create(self, data: dict):
         async with self._session_factory as session:
             stmt = insert(self.model).values(**data).returning(self.model)
             res = await session.execute(stmt)
             await session.commit()
             return res.scalar_one()
 
-    async def update(self, pk: str, data: dict) -> int:
+    async def update(self, pk: str, data: dict):
         async with self._session_factory as session:
             stmt = update(self.model).values(**data).filter_by(id=pk).returning(self.model)
             res = await session.execute(stmt)

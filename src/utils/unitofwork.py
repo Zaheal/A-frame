@@ -4,6 +4,7 @@ from typing import Type
 from src.repositories.houses import HousesRepository
 from src.repositories.reservations import ReservationsRepository
 from src.repositories.users import UsersRepository
+from src.repositories.temporary_reservations import TemporaryReservationsRepository
 from src.database.db import db_helper
 
 
@@ -11,6 +12,7 @@ class IUnitOfWork(ABC):
     houses: Type[HousesRepository]
     reservations: Type[ReservationsRepository]
     users: Type[UsersRepository]
+    temporary_reservations: Type[TemporaryReservationsRepository]
 
     @abstractmethod
     def __init__(self):
@@ -43,6 +45,7 @@ class UnitOfWork:
         self.users = UsersRepository(self.session)
         self.houses = HousesRepository(self.session)
         self.reservations = ReservationsRepository(self.session)
+        self.temporary_reservations = TemporaryReservationsRepository(self.session)
 
     async def __aexit__(self, *args):
         await self.rollback()

@@ -72,3 +72,43 @@ class SReservationEdit(BaseModel):
 
 class SReservationRead(SReservationAdd):
     pass
+
+
+class STemporaryReservation(BaseModel):
+    id: int
+    start: date
+    end: date
+    full_price: int
+    was_paid: bool = False
+    add: bool
+    name: str
+    email: str
+    number: str
+
+    house_id: int
+
+    house: "SHouse"
+
+
+class STemporaryReservationAdd(BaseModel):
+    start: date
+    end: date
+    full_price: int
+    was_paid: bool = False
+    add: bool
+    name: str
+    email: str
+    number: str
+
+    house_id: int
+
+    class Config:
+        from_attributes = True
+
+
+class STemporaryReservationEdit(BaseModel):
+    was_paid: bool = False
+
+
+class STemporaryReservationRead(STemporaryReservationAdd):
+    pass

@@ -1,5 +1,4 @@
 import uuid
-from typing import Optional
 
 from src.schemas.base_schemas import SReservationAdd, SReservationEdit, SReservation
 from src.utils.unitofwork import IUnitOfWork
@@ -49,7 +48,7 @@ class ReservationService:
             reservation_data = await uow.reservations.update(pk=reservation_id, data=reservations_dict)
             return reservation_data
 
-    async def remove_reservation(self, uow: IUnitOfWork, reservation_id: int, user_id: Optional[uuid.UUID] | None = None):
+    async def remove_reservation(self, uow: IUnitOfWork, reservation_id: int, user_id: uuid.UUID | None = None):
         """
         Удаляет бронь из базы данных
 
@@ -63,4 +62,14 @@ class ReservationService:
                 return await uow.reservations.delete(id=reservation_id, user_id=user_id)
             else:  
                 return await uow.reservations.delete(id=reservation_id)
-
+            
+    async def remove_old_reservations(self,
+                                  uow: IUnitOfWork,
+                                  current_date):
+        """
+        
+        :uow:
+        :current_date:
+        """
+        async with uow:
+            await uow.reservations.delete_old_records(current_date)
