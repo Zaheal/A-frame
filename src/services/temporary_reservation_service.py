@@ -50,7 +50,7 @@ class TemporaryReservationService:
         :return:
         """
         async with uow:
-            reservations = await uow.reservations.get_multi(**filters)
+            reservations = await uow.temporary_reservations.get_multi(**filters)
             return reservations
 
 

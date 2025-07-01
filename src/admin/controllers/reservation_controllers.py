@@ -55,7 +55,18 @@ async def delete_reservation(uow: UOWDep, reservation_id: int):
     try:
         result = await ReservationService().remove_reservation(uow, reservation_id)
         logger.debug("delete_reservation successful")
-        return result    
+        return result
     except Exception as e:
-        logger.error("delete_reservation failed", reservation_id=reservation_id, exc_info=e)
+        logger.error(f"delete_reservation failed, {reservation_id}", exc_info=e)
+        raise HTTPException(HTTP_400_BAD_REQUEST, str(e))
+
+
+@router.post("/delete/temporary/{reservation_id}", status_code=HTTP_204_NO_CONTENT)
+async def delete_temporary(uow: UOWDep, reservation_id: int):
+    try:
+        result = await TemporaryReservationService().remove_temporary_reservation(uow, reservation_id)
+        logger.debug("delete_temporary successful")
+        return result
+    except Exception as e:
+        logger.error(f"delete_temporary failed, {reservation_id}", exc_info=e)
         raise HTTPException(HTTP_400_BAD_REQUEST, str(e))

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://www.sng-it.ru/bitrix/templates/master/js/jquery.inputmask.bundle.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', path='/house-page-style.css') }}">
+    <link rel="stylesheet" href="/house-page-style.css">
     <link id="favicon" rel="icon" type="image/x-icon" href="/img/svg/favicon.ico">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,7 @@
 <body>
     <header class="header">
         <div class="header-container _container">
-            <a class="header__logo" href="{{ url_for( 'homepage' ) }}">
+            <a class="header__logo" href="/homepage.html">
                 <div class="header__logo_img"></div>
                 <p class="header__logo_text">
                     A-Frame.Kam
@@ -31,28 +31,28 @@
             <div class="header__nav">
                 <ul class="header__nav_list">
                     <li class="header__nav_list-item">
-                        <a class="header__nav_list-link" href="{{ url_for( 'homepage' ) }}#contacts">
+                        <a class="header__nav_list-link" href="/homepage.html#contacts">
                             Контакты
                         </a>
                     </li>
                     <li class="header__nav_list-item">
-                        <a class="header__nav_list-link" href="{{ url_for( 'homepage' ) }}#gallery">
+                        <a class="header__nav_list-link" href="/homepage.html#gallery">
                             Галерея
                         </a>
                     </li>
                     <li class="header__nav_list-item">
                         {% if user.is_authenticated %}
                             {% if user.is_superuser %}
-                            <a class="header__nav_list-link" href="{{ url_for('admin') }}">
+                            <a class="header__nav_list-link" href="/admin-page.html">
                                 Админка
                             </a>
                             {% else %}
-                            <a class="header__nav_list-link" href="{{ url_for('profile') }}">
+                            <a class="header__nav_list-link" href="/profile-page.html">
                                 Профиль
                             </a>
                             {% endif %}
                         {% else %}
-                        <a class="header__nav_list-link" href="{{ url_for('login') }}">
+                        <a class="header__nav_list-link" href="/login-page.html">
                             Войти
                         </a>
                         {% endif %}
@@ -64,20 +64,20 @@
                 <div class="icon-line"></div>
                 <div class="icon-line"></div>
                 <div class="menu-container">
-                    <a class="menu-container__link" href="{{ url_for( 'homepage' ) }}#contacts">Контакты</a>
-                    <a class="menu-container__link" href="{{ url_for( 'homepage' ) }}#gallery">Галерея</a>
+                    <a class="menu-container__link" href="/homepage.html#contacts">Контакты</a>
+                    <a class="menu-container__link" href="/homepage.html#gallery">Галерея</a>
                     {% if user.is_authenticated %}
                         {% if user.is_superuser %}
-                        <a class="menu-container__link" href="{{ url_for('admin') }}">
+                        <a class="menu-container__link" href="/admin-page.html">
                             Админка
                         </a> 
                         {% else %}
-                        <a class="menu-container__link" href="{{ url_for('profile') }}">
+                        <a class="menu-container__link" href="/profile-page.html">
                             Профиль
                         </a>
                         {% endif %}
                     {% else %}
-                    <a class="menu-container__link" href="{{ url_for('login') }}">
+                    <a class="menu-container__link" href="/login-page.html">
                         Войти
                     </a>
                     {% endif %}
@@ -88,13 +88,13 @@
     <main class="main">
         <section class="section-1" id="section1">
             <video class="video-background" autoplay loop playsinline muted>
-                <source src="{{ url_for('static', path='/img/video/' ~ data.id ~ '/output.mp4') }}" type="video/mp4">
+                <source src="/img/video/' ~ data.id ~ '/output.mp4" type="video/mp4">
                 Ваш браузер не поддерживает видеоформат.
             </video>
             <h1 class="section-1__title">
                 {{ data.style }}
             </h1>
-            <form action="{{ url_for( 'homepage' ) }}">
+            <form action="/homepage.html">
                 <button class="section-1__button">
                     На главную страницу
                 </button>
@@ -125,7 +125,7 @@
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
-                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_1.webp') }}" alt="First picture in slider">
+                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_1.webp" alt="First picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
                                 A-frame
@@ -138,7 +138,7 @@
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
-                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_2.webp') }}" alt="Second picture in slider">
+                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_2.webp" alt="Second picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
                                 Беседка
@@ -151,7 +151,7 @@
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
-                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_3.webp') }}" alt="Third picture in slider">
+                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_3.webp" alt="Third picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
                                 Гостевая
@@ -164,7 +164,7 @@
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
-                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_4.webp') }}" alt="Fourth picture in slider">
+                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_4.webp" alt="Fourth picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
                                 Игры
@@ -177,7 +177,7 @@
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
-                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_5.webp') }}" alt="Fifth picture in slider">
+                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_5.webp" alt="Fifth picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
                                 Ванная
@@ -190,7 +190,7 @@
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
-                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_6.webp') }}" alt="Sixth picture in slider">
+                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_6.webp" alt="Sixth picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
                                 Кухня
@@ -203,7 +203,7 @@
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
-                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_8.webp') }}" alt="Seventh picture in slider">
+                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_8.webp" alt="Seventh picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
                                 Чан
@@ -216,7 +216,7 @@
                     <div class="slider__item">
                         <div class="slider__item_box">
                             <div class="slider__item_box-block">
-                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_7.webp') }}" alt="Eighth picture in slider">
+                                <img loading="lazy" class="slider__item_box-block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_7.webp" alt="Eighth picture in slider">
                             </div>
                             <h1 class="slider__item_box-title">
                                 Спальня
@@ -232,7 +232,7 @@
                 <div class="section-2__slider-touch">
                     <div class="slider-touch__item">
                         <div class="slider-touch__item_block">
-                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_1.webp') }}" alt="First picture in slider-mobile">
+                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_1.webp" alt="First picture in slider-mobile">
                         </div>
                         <p class="slider-touch__item_title">
                             A-frame
@@ -243,7 +243,7 @@
                     </div>
                     <div class="slider-touch__item">
                         <div class="slider-touch__item_block">
-                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_2.webp') }}" alt="Second picture in slider-mobile">
+                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_2.webp" alt="Second picture in slider-mobile">
                         </div>
                         <p class="slider-touch__item_title">
                             Беседка
@@ -254,7 +254,7 @@
                     </div>
                     <div class="slider-touch__item">
                         <div class="slider-touch__item_block">
-                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_3.webp') }}" alt="Third picture in slider-mobile">
+                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_3.webp" alt="Third picture in slider-mobile">
                         </div>
                         <p class="slider-touch__item_title">
                             Гостевая
@@ -265,7 +265,7 @@
                     </div>
                     <div class="slider-touch__item">
                         <div class="slider-touch__item_block">
-                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_4.webp') }}" alt="Fourth picture in slider-mobile">
+                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_4.webp" alt="Fourth picture in slider-mobile">
                         </div>
                         <p class="slider-touch__item_title">
                             Игры
@@ -276,7 +276,7 @@
                     </div>
                     <div class="slider-touch__item">
                         <div class="slider-touch__item_block">
-                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_5.webp') }}" alt="Fifth picture in slider-mobile">
+                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_5.webp" alt="Fifth picture in slider-mobile">
                         </div>
                         <p class="slider-touch__item_title">
                             Ванная
@@ -287,7 +287,7 @@
                     </div>
                     <div class="slider-touch__item">
                         <div class="slider-touch__item_block">
-                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_6.webp') }}" alt="Sixth picture in slider-mobile">
+                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_6.webp" alt="Sixth picture in slider-mobile">
                         </div>
                         <p class="slider-touch__item_title">
                             Кухня
@@ -298,7 +298,7 @@
                     </div>
                     <div class="slider-touch__item">
                         <div class="slider-touch__item_block">
-                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_8.webp') }}" alt="Seventh picture in slider-mobile">
+                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_8.webp" alt="Seventh picture in slider-mobile">
                         </div>
                         <p class="slider-touch__item_title">
                             Чан
@@ -309,7 +309,7 @@
                     </div>
                     <div class="slider-touch__item">
                         <div class="slider-touch__item_block">
-                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="{{ url_for('static', path='img/jpg/' ~ data.id ~ '/IMG_7.webp') }}" alt="Eighth picture in slider-mobile">
+                            <img loading="lazy" class="slider-touch__item_block" onclick="fullScreen(this)" src="/img/jpg/' ~ data.id ~ '/IMG_7.webp" alt="Eighth picture in slider-mobile">
                         </div>
                         <p class="slider-touch__item_title">
                             Спальня
@@ -405,9 +405,9 @@
       <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
       <!-- Slick -->
       <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-      <script src="{{ url_for( 'static', path='/menu.js' ) }}"></script>
-      <script src="{{ url_for( 'static', path='/main.js' ) }}"></script>
-      <script src="{{ url_for( 'static', path='/datepicker.js' ) }}"></script>
-      <script src="{{ url_for( 'static', path='/zoomImage.js' ) }}"></script>
+      <script src="/menu.js"></script>
+      <script src="/main.js"></script>
+      <script src="/datepicker.js"></script>
+      <script src="/zoomImage.js"></script>
 </body>
 </html>

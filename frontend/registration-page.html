@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://www.sng-it.ru/bitrix/templates/master/js/jquery.inputmask.bundle.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for( 'static', path='/registration-page-style.css' ) }}">
+    <link rel="stylesheet" href="/registration-page-style.css">
     <link id="favicon" rel="icon" type="image/x-icon" href="/img/svg/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
 <body>
     <header class="header">
         <div class="header-container">
-            <a class="header__logo" href="{{ url_for( 'homepage' ) }}">
+            <a class="header__logo" href="/homepage.html">
                 <div class="header__logo_img"></div>
                 <p class="header__logo_text">
                     A-Frame.Kam
@@ -30,17 +30,17 @@
             <div class="header__nav">
                 <ul class="header__nav_list">
                     <li class="header__nav_list-item">
-                        <a class="header__nav_list-link" href="{{ url_for( 'homepage' ) }}#contacts">
+                        <a class="header__nav_list-link" href="/homepage.html#contacts">
                             Контакты
                         </a>
                     </li>
                     <li class="header__nav_list-item">
-                        <a class="header__nav_list-link" href="{{ url_for( 'homepage' ) }}#gallery">
+                        <a class="header__nav_list-link" href="/homepage.html#gallery">
                             Галерея
                         </a>
                     </li>
                     <li class="header__nav_list-item">
-                        <a class="header__nav_list-link" href="{{ url_for( 'homepage' ) }}">
+                        <a class="header__nav_list-link" href="/homepage.html">
                             На главную
                         </a>
                     </li>
@@ -51,9 +51,9 @@
                 <div class="icon-line"></div>
                 <div class="icon-line"></div>
                 <div class="menu-container">
-                    <a class="menu-container__link" href="{{ url_for( 'homepage' ) }}#contacts">Контакты</a>
-                    <a class="menu-container__link" href="{{ url_for( 'homepage' ) }}#gallery">Галерея</a>
-                    <a class="menu-container__link" href="{{ url_for( 'homepage' ) }}">На главную</a>
+                    <a class="menu-container__link" href="/homepage.html#contacts">Контакты</a>
+                    <a class="menu-container__link" href="/homepage.html#gallery">Галерея</a>
+                    <a class="menu-container__link" href="/homepage.html">На главную</a>
                 </div>  
             </div>
         </div>
@@ -72,7 +72,7 @@
                 <input class="section-2__input-block_input _password1" type="password" name="password" placeholder="Пароль" required>
                 <button class="section-2__input-block_button">Зарегистрироваться</button>
                 <div id="message" style="margin-top: 10px;"></div>
-                <a href="{{ url_for('login') }}" class="section-2__input-block_link _singIn">Войти</a>
+                <a href="/login-page.html" class="section-2__input-block_link _singIn">Войти</a>
             </form>
             <script>
                 $("#tel").inputmask("+7 (999) 999-99-99"); // Устанавливаем маску
@@ -123,7 +123,7 @@
       <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
       <!-- Slick -->
       <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-      <script src="{{ url_for( 'static', path='/menu.js' ) }}"></script>
-      <script src="{{ url_for( 'static', path='/main.js' ) }}"></script>
+      <script src="/menu.js"></script>
+      <script src="/main.js"></script>
 </body>
 </html>

@@ -213,10 +213,10 @@ function highlightRange(start, end) {
             resetSelection();
             return
         } else if (item >= start && item <= end) {
-            if (itemDate.getDay() == 5 || itemDate.getDay() == 6) {
+            if (itemDate.getDay() == 5 || itemDate.getDay() == 6 || itemDate.getDay() == 0) {
                 const nextDate = new Date(itemDate)
                 nextDate.setDate(nextDate.getDate() + 1)
-                if ((nextDate.getDay() == 6 || nextDate.getDay() == 0) && nextDate <= endDate) {
+                if ((nextDate.getDay() == 6 || nextDate.getDay() == 0 || nextDate.getDay() == 1) && nextDate <= endDate) {
                     counterWeekend += 1000
                 }
             }

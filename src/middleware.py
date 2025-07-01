@@ -7,7 +7,7 @@ logger = get_logger(__name__)
 
 
 class LoggingMiddleware(BaseHTTPMiddleware):
-    
+
     async def dispatch(self, request: Request, call_next):
         logger.debug(f"Request: {request.method} {request.url}")
         response: Response = await call_next(request)

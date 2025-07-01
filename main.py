@@ -4,6 +4,7 @@ import uvicorn
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.gzip import GZipMiddleware
 
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
@@ -31,22 +32,22 @@ redis_settings = get_redis_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("Application startup")
-    dp.include_router(router)
-    await start_bot()
-    webhook_url = bot_settings.get_webhook_url()
-    await bot.set_webhook(url=webhook_url,
-                          allowed_updates=dp.resolve_used_update_types(),
-                          drop_pending_updates=True
-                          )
-    logger.info(f"Webhook set to {webhook_url}")
+    # logger.info("Application startup")
+    # dp.include_router(router)
+    # await start_bot()
+    # webhook_url = bot_settings.get_webhook_url()
+    # await bot.set_webhook(url=webhook_url,
+    #                       allowed_updates=dp.resolve_used_update_types(),
+    #                       drop_pending_updates=True
+    #                       )
+    # logger.info(f"Webhook set to {webhook_url}")
     redis = aioredis.from_url(redis_settings.redis_url)
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache") 
     yield
-    logger.info("Aplication shutdown")
-    await bot.delete_webhook()
-    await stop_bot()
-    logger.info("Webhook deleted")
+    # logger.info("Aplication shutdown")
+    # await bot.delete_webhook()
+    # await stop_bot()
+    # logger.info("Webhook deleted")
 
 
 def get_application() -> FastAPI:
@@ -57,6 +58,8 @@ def get_application() -> FastAPI:
         debug=settings.DEBUG,
         version=settings.VERSION,
         lifespan=lifespan,
+        docs_url=None,
+        redoc_url=None,
     )
 
     Instrumentator().instrument(application).expose(application)
@@ -97,6 +100,7 @@ def get_application() -> FastAPI:
     )
 
     application.add_middleware(LoggingMiddleware)
+    application.add_middleware(GZipMiddleware, minimum_size=1000)
 
     return application
 

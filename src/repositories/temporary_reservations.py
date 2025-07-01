@@ -10,12 +10,15 @@ class TemporaryReservationsRepository(SqlAlchemyRepository):
 
     async def create(self, data: dict):
         async with self._session_factory as session:
-            user_stmt = select(User).where(User.email == data['email'])
+            user_stmt = select(User.id).where(User.email == data['email'])
             result = await session.execute(user_stmt)
-            user = result.scalar_one_or_none()
+            user_id = result.scalar_one_or_none()
 
-            if user:
-                stmt = insert(ReservationModel).values(SReservationAdd(**data)).returning(ReservationModel)
+            if user_id:
+                reservation_data = SReservationAdd(**data)
+                filtered_data = reservation_data.model_dump()
+                filtered_data['user_id'] = user_id
+                stmt = insert(ReservationModel).values(**filtered_data).returning(ReservationModel)
             else:
                 stmt = insert(self.model).values(**data).returning(self.model)
 

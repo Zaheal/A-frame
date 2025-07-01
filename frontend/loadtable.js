@@ -93,13 +93,13 @@ async function loadReservations() {
                 </label>
             </td>
             <td class="section-2__table_body-item">
-                ${ reserv.user.name }
+                ${ reserv.user ? reserv.user.name : reserv.name }
             </td>
             <td class="section-2__table_body-item">
-                ${ reserv.user.number }
+                ${ reserv.user ? reserv.user.number : reserv.number }
             </td>
             <td class="section-2__table_body-item">
-                <form action="/admin/delete/reservation/${ reserv.id }" method="post" onsubmit="window.location.reload()">
+                <form action="/admin/delete/${ reserv.user ? 'reservation' : 'temporary'}/${ reserv.id }" method="post">
                     <button type="submit"><img style="cursor: pointer;" src="${pathTrash}"></button>
                 </form>
             </td>
@@ -117,6 +117,7 @@ loadReservations();
 
 
 async function updateReservation(checkbox) {
+
     const isChecked = checkbox.checked;
 
     await fetch(`/admin/update/reservation/${checkbox.id}`, {
